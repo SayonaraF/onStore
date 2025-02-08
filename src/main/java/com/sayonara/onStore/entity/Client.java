@@ -3,33 +3,36 @@ package com.sayonara.onStore.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Period;
+
 @Entity
-@Table(name = "client")
 @Data
 public class Client {
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "surname")
     private String surname;
 
-    @Column(name = "patronymic")
     private String patronymic;
 
-    @Column(name = "gender")
     private char gender;
 
-    @Column(name = "age")
+    @Column(name = "birth_date")
+    private LocalDate dateOfBirth;
+
+    @Transient
     private int age;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "phone")
     private String phone;
+
+    public int getAge() {
+        return Period.between(dateOfBirth, LocalDate.now()).getYears();
+    }
 }
