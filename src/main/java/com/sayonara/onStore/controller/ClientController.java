@@ -34,19 +34,19 @@ public class ClientController {
 //        return clientServiceHql.findClientByPhone(phone);
     }
 
-    @PostMapping("/create_client")
+    @PostMapping("/create")
     public Client createClient(@RequestBody Client client) {
         return clientServiceJpa.saveClient(client);
 //        return clientServiceHql.saveClient(client);
     }
 
-    @PostMapping("/update_client")
+    @PostMapping("/update")
     public Client updateClient(@RequestBody Client client) {
         return clientServiceJpa.saveClient(client);
 //        return clientServiceHql.saveClient(client);
     }
 
-    @DeleteMapping("/delete_client")
+    @DeleteMapping("/delete")
     public void deleteClient(@RequestBody Client client) {
         clientServiceJpa.deleteClient(client);
 //        clientServiceHql.deleteClient(client);
