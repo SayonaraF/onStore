@@ -1,14 +1,16 @@
 DROP TABLE IF EXISTS client;
 
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE client(
-    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name CHARACTER VARYING(30) NOT NULL,
     surname CHARACTER VARYING(30) NOT NULL,
     patronymic CHARACTER VARYING(30),
     gender CHARACTER(1) NOT NULL CHECK (gender = 'М' OR gender = 'Ж'),
     birth_date DATE NOT NULL CHECK (birth_date >= '1900-01-01' AND birth_date < CURRENT_DATE),
-    email CHARACTER VARYING NOT NULL UNIQUE CHECK (email ~ ''),
-    phone CHARACTER(10) NOT NULL UNIQUE CHECK (phone = '^9[0-9]{9}$')
+    email CHARACTER VARYING NOT NULL UNIQUE CHECK (email ~ '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$'),
+    phone CHARACTER(10) NOT NULL UNIQUE CHECK (phone ~ '^\d{10}$')
 );
 
 -- Функиция для приведения к нижнему регистру поля email
