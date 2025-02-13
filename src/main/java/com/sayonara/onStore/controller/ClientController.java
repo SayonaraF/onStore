@@ -1,6 +1,6 @@
 package com.sayonara.onStore.controller;
 
-import com.sayonara.onStore.entity.Client;
+import com.sayonara.onStore.dto.ClientDTO;
 import com.sayonara.onStore.service.ClientServiceHql;
 import com.sayonara.onStore.service.ClientServiceJpa;
 import lombok.AllArgsConstructor;
@@ -17,38 +17,38 @@ public class ClientController {
     private final ClientServiceHql clientServiceHql;
 
     @GetMapping
-    public List<Client> findAllClients() {
-        return clientServiceJpa.findAllClients();
-//        return clientServiceHql.findAllClients();
+    public List<ClientDTO> findAllClients() {
+//        return clientServiceJpa.findAllClients();
+        return clientServiceHql.findAllClients();
     }
 
     @GetMapping("/find_by_email/{email}")
-    public Client findClientByEmail(@PathVariable String email) {
-        return clientServiceJpa.findClientByEmail(email);
-//        return clientServiceHql.findClientByEmail(email);
+    public ClientDTO findClientByEmail(@PathVariable String email) {
+//        return clientServiceJpa.findClientByEmail(email);
+        return clientServiceHql.findClientByEmail(email);
     }
 
     @GetMapping("/find_by_phone/{phone}")
-    public Client findClientByPhone(@PathVariable String phone) {
-        return clientServiceJpa.findClientByPhone(phone);
-//        return clientServiceHql.findClientByPhone(phone);
+    public ClientDTO findClientByPhone(@PathVariable String phone) {
+//        return clientServiceJpa.findClientByPhone(phone);
+        return clientServiceHql.findClientByPhone(phone);
     }
 
     @PostMapping("/create")
-    public Client createClient(@RequestBody Client client) {
-        return clientServiceJpa.saveClient(client);
-//        return clientServiceHql.saveClient(client);
+    public ClientDTO createClient(@RequestBody ClientDTO clientDTO) {
+//        return clientServiceJpa.saveClient(clientDTO);
+        return clientServiceHql.saveClient(clientDTO);
     }
 
     @PostMapping("/update")
-    public Client updateClient(@RequestBody Client client) {
-        return clientServiceJpa.saveClient(client);
-//        return clientServiceHql.saveClient(client);
+    public ClientDTO updateClient(@RequestBody ClientDTO clientDTO) {
+//        return clientServiceJpa.saveClient(clientDTO);
+        return clientServiceHql.saveClient(clientDTO);
     }
 
     @DeleteMapping("/delete")
-    public void deleteClient(@RequestBody Client client) {
-        clientServiceJpa.deleteClient(client);
-//        clientServiceHql.deleteClient(client);
+    public void deleteClient(@RequestBody ClientDTO clientDTO) {
+//        clientServiceJpa.deleteClient(clientDTO);
+        clientServiceHql.deleteClient(clientDTO);
     }
 }

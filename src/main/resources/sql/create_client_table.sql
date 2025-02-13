@@ -10,7 +10,7 @@ CREATE TABLE client(
     gender CHARACTER(1) NOT NULL CHECK (gender = 'М' OR gender = 'Ж'),
     birth_date DATE NOT NULL CHECK (birth_date >= '1900-01-01' AND birth_date < CURRENT_DATE),
     email CHARACTER VARYING NOT NULL UNIQUE CHECK (email ~ '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$'),
-    phone CHARACTER(10) NOT NULL UNIQUE CHECK (phone ~ '^\d{10}$')
+    phone CHARACTER(12) NOT NULL UNIQUE CHECK (phone ~ '^(\+7)[0-9]{10}$')
 );
 
 -- Функиция для приведения к нижнему регистру поля email

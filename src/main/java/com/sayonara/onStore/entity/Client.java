@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.UUID;
 
 @Entity
@@ -25,22 +24,22 @@ public class Client {
     private char gender;
     @Column(name = "birth_date", nullable = false)
     private LocalDate dateOfBirth;
-    @Transient
-    private int age;
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @Column(name = "phone", nullable = false, unique = true)
+    @Column(name = "phone", nullable = false, unique = true, length = 12)
     private String phone;
 
-    public int getAge() {
-        return Period.between(dateOfBirth, LocalDate.now()).getYears();
-    }
+    //    @Transient
+//    private int age;
+//    public int getAge() {
+//        return Period.between(dateOfBirth, LocalDate.now()).getYears();
+//    }
 
-    public String getPhone() {
-        return ("+7" + phone);
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone.substring(2);
-    }
+//    public String getPhone() {
+//        return ("+7" + phone);
+//    }
+//
+//    public void setPhone(String phone) {
+//        this.phone = phone.substring(2);
+//    }
 }

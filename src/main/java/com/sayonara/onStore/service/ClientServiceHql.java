@@ -1,13 +1,16 @@
 package com.sayonara.onStore.service;
 
+import com.sayonara.onStore.dto.ClientDTO;
 import com.sayonara.onStore.entity.Client;
 import com.sayonara.onStore.repository.ClientRepositoryHql;
+import com.sayonara.onStore.util.ClientMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -15,27 +18,32 @@ public class ClientServiceHql {
 
     private ClientRepositoryHql clientRepositoryHql;
 
-    public List<Client> findAllClients() {
-        return clientRepositoryHql.findAllClients();
+    public List<ClientDTO> findAllClients() {
+        return clientRepositoryHql.findAllClients().stream().map(ClientMapper::toClientDTO).collect(Collectors.toList());
     }
 
-    public Client findClientByEmail(String email) {
-        return clientRepositoryHql.findClientByEmail(email)
+    public ClientDTO findClientByEmail(String email) {
+        Client client = clientRepositoryHql.findClientByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by email: " + email));
+
+        return ClientMapper.toClientDTO(client);
     }
 
-    public Client findClientByPhone(String phone) {
-        return clientRepositoryHql.findClientByPhone(phone)
+    public ClientDTO findClientByPhone(String phone) {
+        Client client = clientRepositoryHql.findClientByPhone(phone)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by phone number: " + phone));
+
+        return ClientMapper.toClientDTO(client);
     }
 
     @Transactional
-    public Client saveClient(Client client) {
-        return clientRepositoryHql.saveClient(client);
+    public ClientDTO saveClient(ClientDTO clientDTO) {
+        Client client = ClientMapper.toClient(clientDTO);
+        return ClientMapper.toClientDTO(clientRepositoryHql.saveClient(client));
     }
 
     @Transactional
-    public void deleteClient(Client client) {
-        clientRepositoryHql.deleteClient(client);
+    public void deleteClient(ClientDTO clientDTO) {
+        clientRepositoryHql.deleteClient(ClientMapper.toClient(clientDTO));
     }
 }
