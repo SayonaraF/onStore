@@ -1,12 +1,13 @@
 package com.sayonara.onStore.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.UUID;
 
-@Data
+@Setter
+@Getter
 public class ClientDTO {
     private UUID id;
     private String name;
@@ -18,15 +19,4 @@ public class ClientDTO {
     private String email;
     private String phone;
 
-    public void setAge(LocalDate dateOfBirth) {
-        age = Period.between(dateOfBirth, LocalDate.now()).getYears();
-    }
-
-    public String getPhone() {
-        return ("+7" + phone);
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone.substring(2);
-    }
 }

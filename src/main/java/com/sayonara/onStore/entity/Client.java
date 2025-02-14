@@ -12,7 +12,6 @@ import java.util.UUID;
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
     @Column(name = "name", nullable = false, length = 30)
     private String name;
@@ -29,17 +28,4 @@ public class Client {
     @Column(name = "phone", nullable = false, unique = true, length = 12)
     private String phone;
 
-    //    @Transient
-//    private int age;
-//    public int getAge() {
-//        return Period.between(dateOfBirth, LocalDate.now()).getYears();
-//    }
-
-//    public String getPhone() {
-//        return ("+7" + phone);
-//    }
-//
-//    public void setPhone(String phone) {
-//        this.phone = phone.substring(2);
-//    }
 }

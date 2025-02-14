@@ -4,6 +4,7 @@ import com.sayonara.onStore.dto.ClientDTO;
 import com.sayonara.onStore.entity.Client;
 import com.sayonara.onStore.repository.ClientRepositoryJpa;
 import com.sayonara.onStore.util.ClientMapper;
+import com.sayonara.onStore.util.ClientValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class ClientServiceJpa {
 
     private final ClientRepositoryJpa clientRepositoryJpa;
+    private final ClientValidator clientValidator;
 
     public List<ClientDTO> findAllClients() {
         return clientRepositoryJpa.findAll().stream().map(ClientMapper::toClientDTO).collect(Collectors.toList());
@@ -37,13 +39,25 @@ public class ClientServiceJpa {
     }
 
     @Transactional
-    public ClientDTO saveClient(ClientDTO clientDTO) {
+    public void saveClient(ClientDTO clientDTO) {
+        clientValidator.validateCreateClientDTO(clientDTO);
+
         Client client = ClientMapper.toClient(clientDTO);
-        return ClientMapper.toClientDTO(clientRepositoryJpa.save(client));
+        clientRepositoryJpa.save(client);
+    }
+
+    @Transactional
+    public void updateClient(ClientDTO clientDTO) {
+        clientValidator.validateUpdateClientDTO(clientDTO);
+
+        Client client = ClientMapper.toClient(clientDTO);
+        clientRepositoryJpa.save(client);
     }
 
     @Transactional
     public void deleteClient(ClientDTO clientDTO) {
+        clientValidator.validateDeleteClientDTO(clientDTO);
+
         clientRepositoryJpa.delete(ClientMapper.toClient(clientDTO));
     }
 }

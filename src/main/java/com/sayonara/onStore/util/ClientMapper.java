@@ -2,9 +2,10 @@ package com.sayonara.onStore.util;
 
 import com.sayonara.onStore.dto.ClientDTO;
 import com.sayonara.onStore.entity.Client;
-import org.springframework.stereotype.Component;
 
-@Component
+import java.time.LocalDate;
+import java.time.Period;
+
 public class ClientMapper {
 
     public static ClientDTO toClientDTO(Client client) {
@@ -15,7 +16,7 @@ public class ClientMapper {
         clientDTO.setPatronymic(client.getPatronymic());
         clientDTO.setGender(client.getGender());
         clientDTO.setDateOfBirth(client.getDateOfBirth());
-        clientDTO.setAge(client.getDateOfBirth());
+        clientDTO.setAge(Period.between(client.getDateOfBirth(), LocalDate.now()).getYears());
         clientDTO.setEmail(client.getEmail());
         clientDTO.setPhone(client.getPhone());
 
