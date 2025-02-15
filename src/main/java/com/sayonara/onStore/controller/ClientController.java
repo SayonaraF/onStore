@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +30,20 @@ public class ClientController {
     @GetMapping("/find_by_phone/{phone}")
     public ClientDTO findClientByPhone(@PathVariable String phone) {
         return clientServiceJpa.findClientByPhone(phone);
+    }
+
+    @PostMapping("/increase_wallet/{id}")
+    public ResponseEntity<?> increaseWalletBalance(@PathVariable UUID id, @RequestParam BigDecimal value) {
+        clientServiceJpa.increaseWalletBalance(id, value);
+
+        return ResponseEntity.ok("Wallet successfully increased");
+    }
+
+    @PostMapping("/decrease_wallet/{id}")
+    public ResponseEntity<?> decreaseWalletBalance(@PathVariable UUID id, @RequestParam BigDecimal value) {
+        clientServiceJpa.decreaseWalletBalance(id, value);
+
+        return ResponseEntity.ok("Wallet successfully decreased");
     }
 
     @PostMapping("/create")

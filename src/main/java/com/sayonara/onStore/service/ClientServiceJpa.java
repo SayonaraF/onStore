@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,6 +38,21 @@ public class ClientServiceJpa {
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by phone number: " + phone));
 
         return ClientMapper.toClientDTO(client);
+    }
+
+    // TODO: не хочу загружать полностью entity, нужно реализовать валидацию value
+    @Transactional
+    public void increaseWalletBalance(UUID id, BigDecimal value) {
+        if (clientRepositoryJpa.existsById(id) && clientRepositoryJpa.increaseWalletById(id, value) != 1) {
+            throw new IllegalArgumentException("Too big value, increase wallet by " + value + " exceeds the limit");
+        }
+    }
+
+    @Transactional
+    public void decreaseWalletBalance(UUID id, BigDecimal value) {
+        if (clientRepositoryJpa.decreaseWalletById(id, value) != 1) {
+            throw new IllegalArgumentException("Not enough funds for this amount: " + value);
+        }
     }
 
     @Transactional
