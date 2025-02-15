@@ -3,7 +3,7 @@ package com.sayonara.onStore.service;
 import com.sayonara.onStore.dto.ClientDTO;
 import com.sayonara.onStore.entity.Client;
 import com.sayonara.onStore.repository.ClientRepositoryHql;
-import com.sayonara.onStore.util.ClientMapper;
+import com.sayonara.onStore.util.mapper.ClientMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

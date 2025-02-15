@@ -8,13 +8,11 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface ClientRepositoryJpa extends JpaRepository<Client, Integer> {
+public interface ClientRepositoryJpa extends JpaRepository<Client, UUID> {
 
     @Query("SELECT c FROM Client c WHERE c.email = :email")
     Optional<Client> findClientByEmail(@Param("email") String email);
 
     @Query("SELECT c FROM Client c WHERE c.phone = :phone")
     Optional<Client> findClientByPhone(@Param("phone") String phone);
-
-    Optional<Client> findById(UUID id);
 }

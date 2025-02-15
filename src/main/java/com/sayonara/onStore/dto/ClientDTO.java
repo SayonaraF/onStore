@@ -1,12 +1,12 @@
 package com.sayonara.onStore.dto;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Setter
+@Builder
 @Getter
 public class ClientDTO {
     private UUID id;

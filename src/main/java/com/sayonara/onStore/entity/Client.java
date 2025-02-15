@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
+@Table(name = "client")
 @Data
-@Table(name = "client", schema = "public")
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

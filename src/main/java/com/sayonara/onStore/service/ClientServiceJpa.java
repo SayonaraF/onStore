@@ -3,14 +3,15 @@ package com.sayonara.onStore.service;
 import com.sayonara.onStore.dto.ClientDTO;
 import com.sayonara.onStore.entity.Client;
 import com.sayonara.onStore.repository.ClientRepositoryJpa;
-import com.sayonara.onStore.util.ClientMapper;
-import com.sayonara.onStore.util.ClientValidator;
+import com.sayonara.onStore.util.mapper.ClientMapper;
+import com.sayonara.onStore.util.validator.ClientValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,24 +41,23 @@ public class ClientServiceJpa {
 
     @Transactional
     public void saveClient(ClientDTO clientDTO) {
-        clientValidator.validateCreateClientDTO(clientDTO);
+        clientValidator.validateSaveClientDTO(clientDTO);
 
-        Client client = ClientMapper.toClient(clientDTO);
-        clientRepositoryJpa.save(client);
+        clientRepositoryJpa.save(ClientMapper.toClient(clientDTO));
     }
 
     @Transactional
     public void updateClient(ClientDTO clientDTO) {
         clientValidator.validateUpdateClientDTO(clientDTO);
 
-        Client client = ClientMapper.toClient(clientDTO);
-        clientRepositoryJpa.save(client);
+        clientRepositoryJpa.save(ClientMapper.toClient(clientDTO));
     }
 
     @Transactional
-    public void deleteClient(ClientDTO clientDTO) {
-        clientValidator.validateDeleteClientDTO(clientDTO);
+    public void deleteClient(UUID id) {
+        clientRepositoryJpa.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Client not found by id: " + id));
 
-        clientRepositoryJpa.delete(ClientMapper.toClient(clientDTO));
+        clientRepositoryJpa.deleteById(id);
     }
 }

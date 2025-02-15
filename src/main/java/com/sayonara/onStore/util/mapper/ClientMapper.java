@@ -1,4 +1,4 @@
-package com.sayonara.onStore.util;
+package com.sayonara.onStore.util.mapper;
 
 import com.sayonara.onStore.dto.ClientDTO;
 import com.sayonara.onStore.entity.Client;
@@ -7,21 +7,6 @@ import java.time.LocalDate;
 import java.time.Period;
 
 public class ClientMapper {
-
-    public static ClientDTO toClientDTO(Client client) {
-        ClientDTO clientDTO = new ClientDTO();
-        clientDTO.setId(client.getId());
-        clientDTO.setName(client.getName());
-        clientDTO.setSurname(client.getSurname());
-        clientDTO.setPatronymic(client.getPatronymic());
-        clientDTO.setGender(client.getGender());
-        clientDTO.setDateOfBirth(client.getDateOfBirth());
-        clientDTO.setAge(Period.between(client.getDateOfBirth(), LocalDate.now()).getYears());
-        clientDTO.setEmail(client.getEmail());
-        clientDTO.setPhone(client.getPhone());
-
-        return clientDTO;
-    }
 
     public static Client toClient(ClientDTO clientDTO) {
         Client client = new Client();
@@ -35,5 +20,19 @@ public class ClientMapper {
         client.setPhone(clientDTO.getPhone());
 
         return client;
+    }
+
+    public static ClientDTO toClientDTO(Client client) {
+        return ClientDTO.builder()
+                .id(client.getId())
+                .name(client.getName())
+                .surname(client.getSurname())
+                .patronymic(client.getPatronymic())
+                .gender(client.getGender())
+                .dateOfBirth(client.getDateOfBirth())
+                .age(Period.between(client.getDateOfBirth(), LocalDate.now()).getYears())
+                .email(client.getEmail())
+                .phone(client.getPhone())
+                .build();
     }
 }

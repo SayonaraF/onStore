@@ -1,4 +1,4 @@
-package com.sayonara.onStore.util;
+package com.sayonara.onStore.util.validator;
 
 import com.sayonara.onStore.dto.ClientDTO;
 import com.sayonara.onStore.entity.Client;
@@ -26,7 +26,7 @@ public class ClientValidator {
         }
         if (clientDTO.getName().length() > 30 || clientDTO.getSurname().length() > 30 ||
         clientDTO.getPatronymic().length() > 30) {
-            throw new IllegalArgumentException("Name, Surname and Patronymic can't be longer than 30 characters");
+            throw new IllegalArgumentException("Client Name, Surname and Patronymic cannot be longer than 30 characters");
         }
         if (clientDTO.getGender() != 'М' && clientDTO.getGender() != 'Ж') {
             System.out.println(clientDTO.getGender());
@@ -47,37 +47,31 @@ public class ClientValidator {
         }
     }
 
-    public void validateCreateClientDTO(ClientDTO clientDTO) {
+    public void validateSaveClientDTO(ClientDTO clientDTO) {
         validateClientDTO(clientDTO);
 
         if (clientRepositoryJpa.findClientByEmail(clientDTO.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new IllegalArgumentException("Client with email \"" + clientDTO.getEmail() + "\" already exists");
         }
         if (clientRepositoryJpa.findClientByPhone(clientDTO.getPhone()).isPresent()) {
-            throw new IllegalArgumentException("Phone already exists");
+            throw new IllegalArgumentException("Client with phone number \"" + clientDTO.getPhone() + "\" already exists");
         }
     }
 
     public void validateUpdateClientDTO(ClientDTO clientDTO) {
         validateClientDTO(clientDTO);
 
-        Optional<Client> clientFromDB = clientRepositoryJpa.findById(clientDTO.getId());
         Optional<Client> clientByEmail = clientRepositoryJpa.findClientByEmail(clientDTO.getEmail());
         Optional<Client> clientByPhone = clientRepositoryJpa.findClientByPhone(clientDTO.getPhone());
 
-        clientFromDB.orElseThrow(() -> new EntityNotFoundException("Client not found"));
+        clientRepositoryJpa.findById(clientDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Client not found with this id: "
+                + clientDTO.getId()));
 
-        if (clientByEmail.isPresent() && clientByEmail.get().getId() != clientDTO.getId()) {
-            throw new IllegalArgumentException("Email already exists");
+        if (clientByEmail.isPresent() && !clientByEmail.get().getId().equals(clientDTO.getId())) {
+            throw new IllegalArgumentException("Client with email \"" + clientDTO.getEmail() + "\" already exists");
         }
         if (clientByPhone.isPresent() && clientByPhone.get().getId() != clientDTO.getId()) {
-            throw new IllegalArgumentException("Phone already exists");
-        }
-    }
-
-    public void validateDeleteClientDTO(ClientDTO clientDTO) {
-        if (clientRepositoryJpa.findById(clientDTO.getId()).isEmpty()) {
-            throw new EntityNotFoundException("Client not found by id: " + clientDTO.getId());
+            throw new IllegalArgumentException("Client with phone number \"" + clientDTO.getPhone() + "\" already exists");
         }
     }
 }
