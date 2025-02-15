@@ -45,6 +45,12 @@ public class ClientValidator {
         if (clientDTO.getPhone().matches(phoneRegex)) {
             throw new IllegalArgumentException("Wrong phone number");
         }
+        if (clientDTO.getWalletBalance() == null) {
+            throw new IllegalArgumentException("Wallet balance is required");
+        }
+        if (clientDTO.getWalletBalance().doubleValue() < 0 || clientDTO.getWalletBalance().doubleValue() > 99999999.99) {
+            throw new IllegalArgumentException("Wallet balance should be between 0 and 99999999");
+        }
     }
 
     public void validateSaveClientDTO(ClientDTO clientDTO) {

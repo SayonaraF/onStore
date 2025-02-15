@@ -3,6 +3,7 @@ package com.sayonara.onStore.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -27,5 +28,7 @@ public class Client {
     private String email;
     @Column(name = "phone", nullable = false, unique = true, length = 12)
     private String phone;
+    @Column(name = "wallet", nullable = false, precision = 10, scale = 2)
+    private BigDecimal walletBalance;
 
 }

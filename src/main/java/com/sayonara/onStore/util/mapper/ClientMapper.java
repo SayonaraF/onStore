@@ -18,6 +18,7 @@ public class ClientMapper {
         client.setDateOfBirth(clientDTO.getDateOfBirth());
         client.setEmail(clientDTO.getEmail());
         client.setPhone(clientDTO.getPhone());
+        client.setWalletBalance(clientDTO.getWalletBalance());
 
         return client;
     }
@@ -33,6 +34,7 @@ public class ClientMapper {
                 .age(Period.between(client.getDateOfBirth(), LocalDate.now()).getYears())
                 .email(client.getEmail())
                 .phone(client.getPhone())
+                .walletBalance(client.getWalletBalance())
                 .build();
     }
 }

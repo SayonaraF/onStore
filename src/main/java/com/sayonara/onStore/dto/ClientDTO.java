@@ -3,6 +3,7 @@ package com.sayonara.onStore.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -18,5 +19,6 @@ public class ClientDTO {
     private int age;
     private String email;
     private String phone;
+    private BigDecimal walletBalance;
 
 }
