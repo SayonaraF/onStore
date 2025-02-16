@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+// TODO: переписать url в нормальный вид
+
 @RestController
 @RequestMapping("/clients")
 @AllArgsConstructor
@@ -44,6 +46,27 @@ public class ClientController {
         clientServiceJpa.decreaseWalletBalance(id, value);
 
         return ResponseEntity.ok("Wallet successfully decreased");
+    }
+
+    @PostMapping("/add_product/{client_id}")
+    public ResponseEntity<?> addProductToCart(@PathVariable UUID client_id, @RequestParam String name) {
+        clientServiceJpa.addProductToCart(client_id, name);
+
+        return ResponseEntity.ok("Product successfully added to cart");
+    }
+
+    @PostMapping("/remove_product/{client_id}")
+    public ResponseEntity<?> removeProductFromCart(@PathVariable UUID client_id, @RequestParam String name) {
+        clientServiceJpa.removeProductFromCart(client_id, name);
+
+        return ResponseEntity.ok("Product successfully removed from cart");
+    }
+
+    @PostMapping("/pay_cart/{client_id}")
+    public ResponseEntity<?> payForCart(@PathVariable UUID client_id) {
+        clientServiceJpa.cartPayment(client_id);
+
+        return ResponseEntity.ok("Cart successfully payed");
     }
 
     @PostMapping("/create")

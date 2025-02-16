@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface ClientRepositoryJpa extends JpaRepository<Client, UUID> {
+public interface ClientRepository extends JpaRepository<Client, UUID> {
 
     @Query("SELECT c FROM Client c WHERE c.email = :email")
     Optional<Client> findClientByEmail(@Param("email") String email);
@@ -29,4 +29,7 @@ public interface ClientRepositoryJpa extends JpaRepository<Client, UUID> {
     @Transactional
     @Query("UPDATE Client c SET c.walletBalance = c.walletBalance - :amount WHERE c.id = :id AND c.walletBalance >= :amount")
     int decreaseWalletById(UUID id, BigDecimal amount);
+
+    @Query("SELECT COALESCE(SUM(p.price), 0) FROM Client c JOIN c.cart p WHERE c.id = :id")
+    BigDecimal getCartTotalPrice(UUID id);
 }

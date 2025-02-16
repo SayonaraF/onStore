@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -21,4 +22,6 @@ public class Product {
     private BigDecimal price;
     @Column(name = "cost_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal costPrice;
+    @ManyToMany(mappedBy = "cart")
+    private List<Client> clients;
 }

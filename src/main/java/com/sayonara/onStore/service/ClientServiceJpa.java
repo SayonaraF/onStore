@@ -2,7 +2,9 @@ package com.sayonara.onStore.service;
 
 import com.sayonara.onStore.dto.ClientDTO;
 import com.sayonara.onStore.entity.Client;
-import com.sayonara.onStore.repository.ClientRepositoryJpa;
+import com.sayonara.onStore.entity.Product;
+import com.sayonara.onStore.repository.ClientRepository;
+import com.sayonara.onStore.repository.ProductRepository;
 import com.sayonara.onStore.util.mapper.ClientMapper;
 import com.sayonara.onStore.util.validator.ClientValidator;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,22 +21,23 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ClientServiceJpa {
 
-    private final ClientRepositoryJpa clientRepositoryJpa;
+    private final ClientRepository clientRepository;
+    private final ProductRepository productRepository;
     private final ClientValidator clientValidator;
 
     public List<ClientDTO> findAllClients() {
-        return clientRepositoryJpa.findAll().stream().map(ClientMapper::toClientDTO).collect(Collectors.toList());
+        return clientRepository.findAll().stream().map(ClientMapper::toClientDTO).collect(Collectors.toList());
     }
 
     public ClientDTO findClientByEmail(String email) {
-        Client client = clientRepositoryJpa.findClientByEmail(email)
+        Client client = clientRepository.findClientByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by email: " + email));
 
         return ClientMapper.toClientDTO(client);
     }
 
     public ClientDTO findClientByPhone(String phone) {
-        Client client = clientRepositoryJpa.findClientByPhone(phone)
+        Client client = clientRepository.findClientByPhone(phone)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by phone number: " + phone));
 
         return ClientMapper.toClientDTO(client);
@@ -43,15 +46,58 @@ public class ClientServiceJpa {
     // TODO: не хочу загружать полностью entity, нужно реализовать валидацию value
     @Transactional
     public void increaseWalletBalance(UUID id, BigDecimal value) {
-        if (clientRepositoryJpa.existsById(id) && clientRepositoryJpa.increaseWalletById(id, value) != 1) {
+        if (clientRepository.existsById(id) && clientRepository.increaseWalletById(id, value) != 1) {
             throw new IllegalArgumentException("Too big value, increase wallet by " + value + " exceeds the limit");
         }
     }
 
     @Transactional
     public void decreaseWalletBalance(UUID id, BigDecimal value) {
-        if (clientRepositoryJpa.decreaseWalletById(id, value) != 1) {
-            throw new IllegalArgumentException("Not enough funds for this amount: " + value);
+        if (clientRepository.decreaseWalletById(id, value) != 1) {
+            throw new IllegalArgumentException("Not enough funds for this decrease: " + value);
+        }
+    }
+
+    public void addProductToCart(UUID id, String productName) {
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Client not found by id: " + id));
+        Product product = productRepository.findProductByName(productName)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found by name: " + productName));
+
+        client.getCart().add(product);
+        clientRepository.save(client);
+    }
+
+    public void removeProductFromCart(UUID id, String productName) {
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Client not found by id: " + id));
+        Product product = productRepository.findProductByName(productName)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found by name: " + productName));
+
+        if (client.getCart().remove(product)) {
+            clientRepository.save(client);
+        } else {
+            throw new EntityNotFoundException("Cart doesn't contain product: " + productName);
+        }
+    }
+
+    public void cartPayment(UUID id) {
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Client not found by id: " + id));
+
+        if (client.getCart().isEmpty()) {
+            throw new EntityNotFoundException("Cart is empty");
+        }
+
+        BigDecimal cartTotalPrice = clientRepository.getCartTotalPrice(id);
+
+        if (client.getWalletBalance().compareTo(cartTotalPrice) >= 0) {
+            System.out.println("мы в ветвлении");
+            client.setWalletBalance(client.getWalletBalance().subtract(cartTotalPrice));
+            client.getCart().clear();
+            clientRepository.save(client);
+        } else {
+            throw new IllegalArgumentException("Not enough funds to pay this cart");
         }
     }
 
@@ -59,21 +105,21 @@ public class ClientServiceJpa {
     public void saveClient(ClientDTO clientDTO) {
         clientValidator.validateSaveClientDTO(clientDTO);
 
-        clientRepositoryJpa.save(ClientMapper.toClient(clientDTO));
+        clientRepository.save(ClientMapper.toClient(clientDTO));
     }
 
     @Transactional
     public void updateClient(ClientDTO clientDTO) {
         clientValidator.validateUpdateClientDTO(clientDTO);
 
-        clientRepositoryJpa.save(ClientMapper.toClient(clientDTO));
+        clientRepository.save(ClientMapper.toClient(clientDTO));
     }
 
     @Transactional
     public void deleteClient(UUID id) {
-        clientRepositoryJpa.findById(id)
+        clientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by id: " + id));
 
-        clientRepositoryJpa.deleteById(id);
+        clientRepository.deleteById(id);
     }
 }

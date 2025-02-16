@@ -2,7 +2,7 @@ package com.sayonara.onStore.util.validator;
 
 import com.sayonara.onStore.dto.ProductDTO;
 import com.sayonara.onStore.entity.Product;
-import com.sayonara.onStore.repository.ProductRepositoryJpa;
+import com.sayonara.onStore.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ProductValidator {
 
-    private final ProductRepositoryJpa productRepositoryJpa;
+    private final ProductRepository productRepository;
 
     public void validateProductDRO(ProductDTO productDTO) {
         if (productDTO.getName() == null || productDTO.getName().isEmpty()) {
@@ -45,7 +45,7 @@ public class ProductValidator {
     public void validateCreateProductDTO(ProductDTO productDTO) {
         validateProductDRO(productDTO);
 
-        if (productRepositoryJpa.findProductByName(productDTO.getName()).isPresent()) {
+        if (productRepository.findProductByName(productDTO.getName()).isPresent()) {
             throw new EntityNotFoundException("Product with name \"" + productDTO.getName() + "\" already exists");
         }
     }
@@ -53,7 +53,7 @@ public class ProductValidator {
     public void validateUpdateProductDTO(ProductDTO productDTO) {
         validateProductDRO(productDTO);
 
-        Optional<Product> product = productRepositoryJpa.findProductByName(productDTO.getName());
+        Optional<Product> product = productRepository.findProductByName(productDTO.getName());
 
         if (product.isPresent() && !product.get().getId().equals(productDTO.getId())) {
             throw new EntityNotFoundException("Product with name \"" + productDTO.getName() + "\" already exists");

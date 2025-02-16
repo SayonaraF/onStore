@@ -2,7 +2,7 @@ package com.sayonara.onStore.util.validator;
 
 import com.sayonara.onStore.dto.ClientDTO;
 import com.sayonara.onStore.entity.Client;
-import com.sayonara.onStore.repository.ClientRepositoryJpa;
+import com.sayonara.onStore.repository.ClientRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ClientValidator {
 
-    private ClientRepositoryJpa clientRepositoryJpa;
+    private ClientRepository clientRepository;
 
     public void validateClientDTO(ClientDTO clientDTO) {
         String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
@@ -56,10 +56,10 @@ public class ClientValidator {
     public void validateSaveClientDTO(ClientDTO clientDTO) {
         validateClientDTO(clientDTO);
 
-        if (clientRepositoryJpa.findClientByEmail(clientDTO.getEmail()).isPresent()) {
+        if (clientRepository.findClientByEmail(clientDTO.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Client with email \"" + clientDTO.getEmail() + "\" already exists");
         }
-        if (clientRepositoryJpa.findClientByPhone(clientDTO.getPhone()).isPresent()) {
+        if (clientRepository.findClientByPhone(clientDTO.getPhone()).isPresent()) {
             throw new IllegalArgumentException("Client with phone number \"" + clientDTO.getPhone() + "\" already exists");
         }
     }
@@ -67,10 +67,10 @@ public class ClientValidator {
     public void validateUpdateClientDTO(ClientDTO clientDTO) {
         validateClientDTO(clientDTO);
 
-        Optional<Client> clientByEmail = clientRepositoryJpa.findClientByEmail(clientDTO.getEmail());
-        Optional<Client> clientByPhone = clientRepositoryJpa.findClientByPhone(clientDTO.getPhone());
+        Optional<Client> clientByEmail = clientRepository.findClientByEmail(clientDTO.getEmail());
+        Optional<Client> clientByPhone = clientRepository.findClientByPhone(clientDTO.getPhone());
 
-        clientRepositoryJpa.findById(clientDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Client not found with this id: "
+        clientRepository.findById(clientDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Client not found with this id: "
                 + clientDTO.getId()));
 
         if (clientByEmail.isPresent() && !clientByEmail.get().getId().equals(clientDTO.getId())) {
