@@ -43,16 +43,29 @@ public class ClientServiceJpa {
         return ClientMapper.toClientDTO(client);
     }
 
-    // TODO: не хочу загружать полностью entity, нужно реализовать валидацию value
     @Transactional
     public void increaseWalletBalance(UUID id, BigDecimal value) {
-        if (clientRepository.existsById(id) && clientRepository.increaseWalletById(id, value) != 1) {
+        if (!clientRepository.existsById(id)) {
+            throw new EntityNotFoundException("Client not found by id: " + id);
+        }
+
+        clientValidator.validateMoneyFormat(value);
+
+        int resultOfIncrease = clientRepository.increaseWalletById(id, value);
+
+        if (resultOfIncrease != 1) {
             throw new IllegalArgumentException("Too big value, increase wallet by " + value + " exceeds the limit");
         }
     }
 
     @Transactional
     public void decreaseWalletBalance(UUID id, BigDecimal value) {
+        if (!clientRepository.existsById(id)) {
+            throw new EntityNotFoundException("Client not found by id: " + id);
+        }
+
+        clientValidator.validateMoneyFormat(value);
+
         if (clientRepository.decreaseWalletById(id, value) != 1) {
             throw new IllegalArgumentException("Not enough funds for this decrease: " + value);
         }

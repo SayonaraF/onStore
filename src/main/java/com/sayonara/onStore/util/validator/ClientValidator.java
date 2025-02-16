@@ -7,6 +7,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -78,6 +80,17 @@ public class ClientValidator {
         }
         if (clientByPhone.isPresent() && clientByPhone.get().getId() != clientDTO.getId()) {
             throw new IllegalArgumentException("Client with phone number \"" + clientDTO.getPhone() + "\" already exists");
+        }
+    }
+
+    public void validateMoneyFormat(BigDecimal value) {
+        if (value == null) {
+            throw new IllegalArgumentException("Значение не должно быть null");
+        }
+
+        value = value.setScale(2, RoundingMode.HALF_EVEN);
+        if ((value.precision() - value.scale()) > 8) {
+            throw new IllegalArgumentException("Wrong format of value: " + value + "\nExample: 99999999.99");
         }
     }
 }

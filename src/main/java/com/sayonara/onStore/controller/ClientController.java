@@ -10,8 +10,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-// TODO: переписать url в нормальный вид
-
 @RestController
 @RequestMapping("/clients")
 @AllArgsConstructor
@@ -34,35 +32,35 @@ public class ClientController {
         return clientServiceJpa.findClientByPhone(phone);
     }
 
-    @PostMapping("/increase_wallet/{id}")
+    @PostMapping("/{id}/increase_wallet")
     public ResponseEntity<?> increaseWalletBalance(@PathVariable UUID id, @RequestParam BigDecimal value) {
         clientServiceJpa.increaseWalletBalance(id, value);
 
         return ResponseEntity.ok("Wallet successfully increased");
     }
 
-    @PostMapping("/decrease_wallet/{id}")
+    @PostMapping("/{id}/decrease_wallet")
     public ResponseEntity<?> decreaseWalletBalance(@PathVariable UUID id, @RequestParam BigDecimal value) {
         clientServiceJpa.decreaseWalletBalance(id, value);
 
         return ResponseEntity.ok("Wallet successfully decreased");
     }
 
-    @PostMapping("/add_product/{client_id}")
+    @PostMapping("/{client_id}/add_product")
     public ResponseEntity<?> addProductToCart(@PathVariable UUID client_id, @RequestParam String name) {
         clientServiceJpa.addProductToCart(client_id, name);
 
         return ResponseEntity.ok("Product successfully added to cart");
     }
 
-    @PostMapping("/remove_product/{client_id}")
+    @PostMapping("/{client_id}/remove_product")
     public ResponseEntity<?> removeProductFromCart(@PathVariable UUID client_id, @RequestParam String name) {
         clientServiceJpa.removeProductFromCart(client_id, name);
 
         return ResponseEntity.ok("Product successfully removed from cart");
     }
 
-    @PostMapping("/pay_cart/{client_id}")
+    @PostMapping("/{client_id}/pay_cart")
     public ResponseEntity<?> payForCart(@PathVariable UUID client_id) {
         clientServiceJpa.cartPayment(client_id);
 
