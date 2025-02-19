@@ -71,6 +71,7 @@ public class ClientServiceJpa {
         }
     }
 
+    @Transactional
     public void addProductToCart(UUID id, String productName) {
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by id: " + id));
@@ -81,6 +82,7 @@ public class ClientServiceJpa {
         clientRepository.save(client);
     }
 
+    @Transactional
     public void removeProductFromCart(UUID id, String productName) {
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by id: " + id));
@@ -94,7 +96,8 @@ public class ClientServiceJpa {
         }
     }
 
-    public void cartPayment(UUID id) {
+    @Transactional
+    public void payCart(UUID id) {
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by id: " + id));
 
@@ -105,7 +108,6 @@ public class ClientServiceJpa {
         BigDecimal cartTotalPrice = clientRepository.getCartTotalPrice(id);
 
         if (client.getWalletBalance().compareTo(cartTotalPrice) >= 0) {
-            System.out.println("мы в ветвлении");
             client.setWalletBalance(client.getWalletBalance().subtract(cartTotalPrice));
             client.getCart().clear();
             clientRepository.save(client);

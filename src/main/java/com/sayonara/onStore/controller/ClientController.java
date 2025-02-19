@@ -62,7 +62,7 @@ public class ClientController {
 
     @PostMapping("/{client_id}/pay_cart")
     public ResponseEntity<?> payForCart(@PathVariable(name = "client_id") UUID clientId) {
-        clientServiceJpa.cartPayment(clientId);
+        clientServiceJpa.payCart(clientId);
 
         return ResponseEntity.ok("Cart successfully payed");
     }

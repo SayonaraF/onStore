@@ -8,6 +8,7 @@ import com.sayonara.onStore.util.validator.ProductValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,18 +32,21 @@ public class ProductServiceJpa {
         return ProductMapper.toProductDTO(product);
     }
 
+    @Transactional
     public void saveProduct(ProductDTO productDTO) {
         productValidator.validateCreateProductDTO(productDTO);
 
         productRepository.save(ProductMapper.toProduct(productDTO));
     }
 
+    @Transactional
     public void updateProduct(ProductDTO productDTO) {
         productValidator.validateUpdateProductDTO(productDTO);
 
         productRepository.save(ProductMapper.toProduct(productDTO));
     }
 
+    @Transactional
     public void deleteProduct(UUID id) {
         productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found by id: " + id));
