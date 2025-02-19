@@ -46,7 +46,7 @@ public class ProductValidator {
         validateProductDRO(productDTO);
 
         if (productRepository.findProductByName(productDTO.getName()).isPresent()) {
-            throw new EntityNotFoundException("Product with name \"" + productDTO.getName() + "\" already exists");
+            throw new EntityNotFoundException(String.format("Product with name \"%s\" already exists", productDTO.getName()));
         }
     }
 
@@ -56,7 +56,7 @@ public class ProductValidator {
         Optional<Product> product = productRepository.findProductByName(productDTO.getName());
 
         if (product.isPresent() && !product.get().getId().equals(productDTO.getId())) {
-            throw new EntityNotFoundException("Product with name \"" + productDTO.getName() + "\" already exists");
+            throw new EntityNotFoundException(String.format("Product with name \"%s\" already exists", productDTO.getName()));
         }
     }
 }

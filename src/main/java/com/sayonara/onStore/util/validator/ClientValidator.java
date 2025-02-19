@@ -34,11 +34,15 @@ public class ClientValidator {
             System.out.println(clientDTO.getGender());
             throw new IllegalArgumentException("Wrong gender");
         }
+        if (clientDTO.getDateOfBirth() == null) {
+            throw new IllegalArgumentException("Date of Birth is required");
+        }
         if (clientDTO.getDateOfBirth().isAfter(LocalDate.now()) || clientDTO.getDateOfBirth()
                 .isBefore(LocalDate.of(1900, 1, 1))) {
             throw new IllegalArgumentException("Incorrect date of birth");
         }
-        if (clientDTO.getEmail() == null || clientDTO.getPhone() == null) {
+        if (clientDTO.getEmail() == null || clientDTO.getPhone() == null || clientDTO.getEmail().isEmpty() ||
+                clientDTO.getPhone().isEmpty()) {
             throw new IllegalArgumentException("Email and phone are required");
         }
         if (!clientDTO.getEmail().matches(emailRegex)) {
@@ -59,10 +63,11 @@ public class ClientValidator {
         validateClientDTO(clientDTO);
 
         if (clientRepository.findClientByEmail(clientDTO.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Client with email \"" + clientDTO.getEmail() + "\" already exists");
+            throw new IllegalArgumentException(String.format("Client with email \"%s\" already exists", clientDTO.getEmail()));
         }
         if (clientRepository.findClientByPhone(clientDTO.getPhone()).isPresent()) {
-            throw new IllegalArgumentException("Client with phone number \"" + clientDTO.getPhone() + "\" already exists");
+            throw new IllegalArgumentException(String.format("Client with phone number \"%s\" already exists",
+                    clientDTO.getPhone()));
         }
     }
 
@@ -76,10 +81,11 @@ public class ClientValidator {
                 + clientDTO.getId()));
 
         if (clientByEmail.isPresent() && !clientByEmail.get().getId().equals(clientDTO.getId())) {
-            throw new IllegalArgumentException("Client with email \"" + clientDTO.getEmail() + "\" already exists");
+            throw new IllegalArgumentException(String.format("Client with email \"%s\" already exists", clientDTO.getEmail()));
         }
         if (clientByPhone.isPresent() && clientByPhone.get().getId() != clientDTO.getId()) {
-            throw new IllegalArgumentException("Client with phone number \"" + clientDTO.getPhone() + "\" already exists");
+            throw new IllegalArgumentException(String.format("Client with phone number \"%s\" already exists",
+                    clientDTO.getPhone()));
         }
     }
 
@@ -90,7 +96,7 @@ public class ClientValidator {
 
         value = value.setScale(2, RoundingMode.HALF_EVEN);
         if ((value.precision() - value.scale()) > 8) {
-            throw new IllegalArgumentException("Wrong format of value: " + value + "\nExample: 99999999.99");
+            throw new IllegalArgumentException(String.format("Wrong format of value: %s\nExample: 99999999.99", value));
         }
     }
 }

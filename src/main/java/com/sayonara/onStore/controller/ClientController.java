@@ -47,22 +47,22 @@ public class ClientController {
     }
 
     @PostMapping("/{client_id}/add_product")
-    public ResponseEntity<?> addProductToCart(@PathVariable UUID client_id, @RequestParam String name) {
-        clientServiceJpa.addProductToCart(client_id, name);
+    public ResponseEntity<?> addProductToCart(@PathVariable(name = "client_id") UUID clientId, @RequestParam String name) {
+        clientServiceJpa.addProductToCart(clientId, name);
 
         return ResponseEntity.ok("Product successfully added to cart");
     }
 
     @PostMapping("/{client_id}/remove_product")
-    public ResponseEntity<?> removeProductFromCart(@PathVariable UUID client_id, @RequestParam String name) {
-        clientServiceJpa.removeProductFromCart(client_id, name);
+    public ResponseEntity<?> removeProductFromCart(@PathVariable(name = "client_id") UUID clientId, @RequestParam String name) {
+        clientServiceJpa.removeProductFromCart(clientId, name);
 
         return ResponseEntity.ok("Product successfully removed from cart");
     }
 
     @PostMapping("/{client_id}/pay_cart")
-    public ResponseEntity<?> payForCart(@PathVariable UUID client_id) {
-        clientServiceJpa.cartPayment(client_id);
+    public ResponseEntity<?> payForCart(@PathVariable(name = "client_id") UUID clientId) {
+        clientServiceJpa.cartPayment(clientId);
 
         return ResponseEntity.ok("Cart successfully payed");
     }
