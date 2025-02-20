@@ -5,6 +5,7 @@ import com.sayonara.onStore.entity.Client;
 import com.sayonara.onStore.repository.ClientRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -17,13 +18,13 @@ import java.util.Optional;
 public class ClientValidator {
 
     private ClientRepository clientRepository;
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+    private static final String PHONE_REGEX = "^\\+7\\d{10}$";
 
     public void validateClientDTO(ClientDTO clientDTO) {
-        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-        String phoneRegex = "^\\\\+7\\d{10}$";
 
-        if (clientDTO.getName() == null || clientDTO.getSurname() == null || clientDTO.getName().isEmpty() ||
-                clientDTO.getSurname().isEmpty()) {
+        if (StringUtils.isAnyEmpty(clientDTO.getSurname(), clientDTO.getName()) ||
+                StringUtils.isAnyBlank(clientDTO.getName(), clientDTO.getSurname())) {
             throw new IllegalArgumentException("Client Name or Surname are required");
         }
         if (clientDTO.getName().length() > 30 || clientDTO.getSurname().length() > 30 ||
@@ -31,7 +32,6 @@ public class ClientValidator {
             throw new IllegalArgumentException("Client Name, Surname and Patronymic cannot be longer than 30 characters");
         }
         if (clientDTO.getGender() != 'М' && clientDTO.getGender() != 'Ж') {
-            System.out.println(clientDTO.getGender());
             throw new IllegalArgumentException("Wrong gender");
         }
         if (clientDTO.getDateOfBirth() == null) {
@@ -41,14 +41,14 @@ public class ClientValidator {
                 .isBefore(LocalDate.of(1900, 1, 1))) {
             throw new IllegalArgumentException("Incorrect date of birth");
         }
-        if (clientDTO.getEmail() == null || clientDTO.getPhone() == null || clientDTO.getEmail().isEmpty() ||
-                clientDTO.getPhone().isEmpty()) {
+        if (StringUtils.isAllEmpty(clientDTO.getEmail(), clientDTO.getPhone()) ||
+                StringUtils.isAllBlank(clientDTO.getEmail(), clientDTO.getPhone())) {
             throw new IllegalArgumentException("Email and phone are required");
         }
-        if (!clientDTO.getEmail().matches(emailRegex)) {
+        if (!clientDTO.getEmail().matches(EMAIL_REGEX)) {
             throw new IllegalArgumentException("Invalid email");
         }
-        if (clientDTO.getPhone().matches(phoneRegex)) {
+        if (!clientDTO.getPhone().matches(PHONE_REGEX)) {
             throw new IllegalArgumentException("Wrong phone number");
         }
         if (clientDTO.getWalletBalance() == null) {
@@ -83,7 +83,7 @@ public class ClientValidator {
         if (clientByEmail.isPresent() && !clientByEmail.get().getId().equals(clientDTO.getId())) {
             throw new IllegalArgumentException(String.format("Client with email \"%s\" already exists", clientDTO.getEmail()));
         }
-        if (clientByPhone.isPresent() && clientByPhone.get().getId() != clientDTO.getId()) {
+        if (clientByPhone.isPresent() && !clientByPhone.get().getId().equals(clientDTO.getId())) {
             throw new IllegalArgumentException(String.format("Client with phone number \"%s\" already exists",
                     clientDTO.getPhone()));
         }
@@ -97,6 +97,9 @@ public class ClientValidator {
         value = value.setScale(2, RoundingMode.HALF_EVEN);
         if ((value.precision() - value.scale()) > 8) {
             throw new IllegalArgumentException(String.format("Wrong format of value: %s\nExample: 99999999.99", value));
+        }
+        if (value.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException(String.format("Value must be positive: %s", value));
         }
     }
 }

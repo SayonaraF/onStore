@@ -19,6 +19,7 @@
 		<java.version>17</java.version>
 		<lombok.version>1.18.36</lombok.version>
 		<maven.plugin.version>3.8.1</maven.plugin.version>
+		<apache.commons.version>3.17.0</apache.commons.version>
 	</properties>
 
 	<dependencies>
@@ -55,9 +56,16 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${apache.commons.version}</version>
 		</dependency>
 	</dependencies>
 

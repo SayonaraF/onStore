@@ -48,9 +48,14 @@ public class ProductServiceJpa {
 
     @Transactional
     public void deleteProduct(UUID id) {
-        productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found by id: " + id));
+        isProductExists(id);
 
         productRepository.deleteById(id);
+    }
+
+    private void isProductExists(UUID id) {
+        if (!productRepository.existsById(id)) {
+            throw new EntityNotFoundException("Product not found by id: " + id);
+        }
     }
 }

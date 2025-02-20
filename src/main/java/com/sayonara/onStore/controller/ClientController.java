@@ -81,8 +81,8 @@ public class ClientController {
         return ResponseEntity.ok("Successfully updated client");
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteClient(@PathVariable("id") UUID id) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteClient(@RequestParam UUID id) {
         clientServiceJpa.deleteClient(id);
 
         return ResponseEntity.ok("Successfully deleted client");

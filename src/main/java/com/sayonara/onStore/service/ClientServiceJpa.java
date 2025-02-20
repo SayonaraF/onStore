@@ -45,10 +45,7 @@ public class ClientServiceJpa {
 
     @Transactional
     public void increaseWalletBalance(UUID id, BigDecimal value) {
-        if (!clientRepository.existsById(id)) {
-            throw new EntityNotFoundException("Client not found by id: " + id);
-        }
-
+        isClientExists(id);
         clientValidator.validateMoneyFormat(value);
 
         int resultOfIncrease = clientRepository.increaseWalletById(id, value);
@@ -60,10 +57,7 @@ public class ClientServiceJpa {
 
     @Transactional
     public void decreaseWalletBalance(UUID id, BigDecimal value) {
-        if (!clientRepository.existsById(id)) {
-            throw new EntityNotFoundException("Client not found by id: " + id);
-        }
-
+        isClientExists(id);
         clientValidator.validateMoneyFormat(value);
 
         if (clientRepository.decreaseWalletById(id, value) != 1) {
@@ -132,9 +126,14 @@ public class ClientServiceJpa {
 
     @Transactional
     public void deleteClient(UUID id) {
-        clientRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Client not found by id: " + id));
+        isClientExists(id);
 
         clientRepository.deleteById(id);
+    }
+
+    private void isClientExists(UUID id) {
+        if(!clientRepository.existsById(id)) {
+            throw new EntityNotFoundException("Client not found by id: " + id);
+        }
     }
 }
