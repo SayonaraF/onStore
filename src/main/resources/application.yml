@@ -13,3 +13,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+logging:
+  file:
+    name: logs/app.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%level] - %msg%n"

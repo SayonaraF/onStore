@@ -3,6 +3,8 @@ package com.sayonara.onStore.controller;
 import com.sayonara.onStore.dto.ClientDTO;
 import com.sayonara.onStore.service.ClientServiceJpa;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,24 +18,29 @@ import java.util.UUID;
 public class ClientController {
 
     private final ClientServiceJpa clientServiceJpa;
+    private final Logger logger = LoggerFactory.getLogger(ClientController.class);
 
     @GetMapping
     public List<ClientDTO> findAllClients() {
+        logger.info("Получен GET-запрос: /clients на поиск всех клиентов");
         return clientServiceJpa.findAllClients();
     }
 
     @GetMapping("/find_by_email/{email}")
     public ClientDTO findClientByEmail(@PathVariable String email) {
+        logger.info("Получен GET-запрос на поиск клиента по email: {}", email);
         return clientServiceJpa.findClientByEmail(email);
     }
 
     @GetMapping("/find_by_phone/{phone}")
     public ClientDTO findClientByPhone(@PathVariable String phone) {
+        logger.info("Получен GET-запрос на поиск клиента по телефону: {}", phone);
         return clientServiceJpa.findClientByPhone(phone);
     }
 
     @PostMapping("/{id}/increase_wallet")
     public ResponseEntity<?> increaseWalletBalance(@PathVariable UUID id, @RequestParam BigDecimal value) {
+        logger.info("Получен POST-запрос на пополнение кошелька на сумму {}", value);
         clientServiceJpa.increaseWalletBalance(id, value);
 
         return ResponseEntity.ok("Wallet successfully increased");
@@ -41,6 +48,7 @@ public class ClientController {
 
     @PostMapping("/{id}/decrease_wallet")
     public ResponseEntity<?> decreaseWalletBalance(@PathVariable UUID id, @RequestParam BigDecimal value) {
+        logger.info("Получен POST-запрос на снятие с кошелька суммы {}", value);
         clientServiceJpa.decreaseWalletBalance(id, value);
 
         return ResponseEntity.ok("Wallet successfully decreased");
@@ -48,6 +56,7 @@ public class ClientController {
 
     @PostMapping("/{client_id}/add_product")
     public ResponseEntity<?> addProductToCart(@PathVariable(name = "client_id") UUID clientId, @RequestParam String name) {
+        logger.info("Получен POST-запрос на добавление в корзину продукта \"{}\"", name);
         clientServiceJpa.addProductToCart(clientId, name);
 
         return ResponseEntity.ok("Product successfully added to cart");
@@ -55,6 +64,7 @@ public class ClientController {
 
     @PostMapping("/{client_id}/remove_product")
     public ResponseEntity<?> removeProductFromCart(@PathVariable(name = "client_id") UUID clientId, @RequestParam String name) {
+        logger.info("Получен POST-запрос на удаление из корзины продукта \"{}\"", name);
         clientServiceJpa.removeProductFromCart(clientId, name);
 
         return ResponseEntity.ok("Product successfully removed from cart");
@@ -62,6 +72,7 @@ public class ClientController {
 
     @PostMapping("/{client_id}/pay_cart")
     public ResponseEntity<?> payForCart(@PathVariable(name = "client_id") UUID clientId) {
+        logger.info("Получен POST-запрос на оплату корзины у клиента");
         clientServiceJpa.payCart(clientId);
 
         return ResponseEntity.ok("Cart successfully payed");
@@ -69,6 +80,7 @@ public class ClientController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createClient(@RequestBody ClientDTO clientDTO) {
+        logger.info("Поступил POST-запрос на создание клиента");
         clientServiceJpa.saveClient(clientDTO);
 
         return ResponseEntity.ok("Successfully created client");
@@ -76,6 +88,7 @@ public class ClientController {
 
     @PostMapping("/update")
     public ResponseEntity<?> updateClient(@RequestBody ClientDTO clientDTO) {
+        logger.info("Поступил POST-запрос на изменение клиента");
         clientServiceJpa.updateClient(clientDTO);
 
         return ResponseEntity.ok("Successfully updated client");
@@ -83,6 +96,7 @@ public class ClientController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteClient(@RequestParam UUID id) {
+        logger.info("Поступил DELETE-запрос на удаление клиента");
         clientServiceJpa.deleteClient(id);
 
         return ResponseEntity.ok("Successfully deleted client");
