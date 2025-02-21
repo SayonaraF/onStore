@@ -2,6 +2,8 @@ package com.sayonara.onStore.controller;
 
 import com.sayonara.onStore.dto.ClientDTO;
 import com.sayonara.onStore.service.ClientServiceJpa;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+@Tag(name = "client_methods")
 @RestController
 @RequestMapping("/clients")
 @AllArgsConstructor
@@ -20,6 +23,10 @@ public class ClientController {
     private final ClientServiceJpa clientServiceJpa;
     private final Logger logger = LoggerFactory.getLogger(ClientController.class);
 
+    @Operation(
+            summary = "Summary for findAllClients()",
+            description = "Description for findAllClients()"
+    )
     @GetMapping
     public List<ClientDTO> findAllClients() {
         logger.info("Получен GET-запрос: /clients на поиск всех клиентов");
@@ -54,26 +61,26 @@ public class ClientController {
         return ResponseEntity.ok("Wallet successfully decreased");
     }
 
-    @PostMapping("/{client_id}/add_product")
-    public ResponseEntity<?> addProductToCart(@PathVariable(name = "client_id") UUID clientId, @RequestParam String name) {
+    @PostMapping("/{id}/add_product")
+    public ResponseEntity<?> addProductToCart(@PathVariable UUID id, @RequestParam String name) {
         logger.info("Получен POST-запрос на добавление в корзину продукта \"{}\"", name);
-        clientServiceJpa.addProductToCart(clientId, name);
+        clientServiceJpa.addProductToCart(id, name);
 
         return ResponseEntity.ok("Product successfully added to cart");
     }
 
-    @PostMapping("/{client_id}/remove_product")
-    public ResponseEntity<?> removeProductFromCart(@PathVariable(name = "client_id") UUID clientId, @RequestParam String name) {
+    @PostMapping("/{id}/remove_product")
+    public ResponseEntity<?> removeProductFromCart(@PathVariable UUID id, @RequestParam String name) {
         logger.info("Получен POST-запрос на удаление из корзины продукта \"{}\"", name);
-        clientServiceJpa.removeProductFromCart(clientId, name);
+        clientServiceJpa.removeProductFromCart(id, name);
 
         return ResponseEntity.ok("Product successfully removed from cart");
     }
 
-    @PostMapping("/{client_id}/pay_cart")
-    public ResponseEntity<?> payForCart(@PathVariable(name = "client_id") UUID clientId) {
+    @PostMapping("/{id}/pay_cart")
+    public ResponseEntity<?> payForCart(@PathVariable UUID id) {
         logger.info("Получен POST-запрос на оплату корзины у клиента");
-        clientServiceJpa.payCart(clientId);
+        clientServiceJpa.payCart(id);
 
         return ResponseEntity.ok("Cart successfully payed");
     }
