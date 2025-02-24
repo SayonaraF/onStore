@@ -49,6 +49,7 @@ public class ProductService {
     public void updateProduct(ProductDTO productDTO) {
         log.info("Запрос на изменение продукта с id: {}", productDTO.getId());
         productValidator.validateUpdateProductDTO(productDTO);
+        isProductExists(productDTO.getId());
 
         productRepository.save(ProductMapper.toProduct(productDTO));
         log.info("Успешно изменен продукт с id: {}", productDTO.getId());
