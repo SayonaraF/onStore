@@ -1,7 +1,7 @@
 package com.sayonara.onStore.controller;
 
 import com.sayonara.onStore.dto.ProductDTO;
-import com.sayonara.onStore.service.ProductServiceJpa;
+import com.sayonara.onStore.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ProductController {
 
-    private final ProductServiceJpa productService;
+    private final ProductService productService;
 
     @GetMapping
     public List<ProductDTO> findAllProducts() {
@@ -32,7 +32,7 @@ public class ProductController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createProduct(@RequestBody ProductDTO product) {
-        log.info("Поступил POST-запрос: /create на создание продукта");
+        log.info("Поступил POST-запрос: /create на создание продукта с именем: {}", product.getName());
         productService.saveProduct(product);
 
         return ResponseEntity.ok("Successfully created product");
@@ -40,7 +40,7 @@ public class ProductController {
 
     @PostMapping("/update")
     public ResponseEntity<?> updateProduct(@RequestBody ProductDTO product) {
-        log.info("Поступил POST-запрос: /update на обновление продукта");
+        log.info("Поступил POST-запрос: /update на обновление продукта с id: {}", product.getId());
         productService.updateProduct(product);
 
         return ResponseEntity.ok("Successfully updated product");
@@ -48,7 +48,7 @@ public class ProductController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") UUID id) {
-        log.info("Поступил DELETE-запрос: /delete/{id} на удаление продукта");
+        log.info("Поступил DELETE-запрос: /delete/{id} на удаление продукта с id: {}", id);
         productService.deleteProduct(id);
 
         return ResponseEntity.ok("Successfully deleted product");

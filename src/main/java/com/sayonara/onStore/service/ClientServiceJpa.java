@@ -50,7 +50,7 @@ public class ClientServiceJpa {
 
     @Transactional
     public void increaseWalletBalance(UUID id, BigDecimal value) {
-        log.info("Запрос на увеличение клиента кошелька");
+        log.info("Запрос на пополнение кошелька клиента c id: {}", id);
         isClientExists(id);
         clientValidator.validateMoneyFormat(value);
 
@@ -59,24 +59,24 @@ public class ClientServiceJpa {
         if (resultOfIncrease != 1) {
             throw new IllegalArgumentException("Too big value, increase wallet by " + value + " exceeds the limit");
         }
-        log.info("Кошелек успешно пополнен");
+        log.info("Кошелек успешно пополнен у клиента с id: {}", id);
     }
 
     @Transactional
     public void decreaseWalletBalance(UUID id, BigDecimal value) {
-        log.info("Запрос на снятие с кошелька средств");
+        log.info("Запрос на снятие с кошелька средств у клиента с id: {}", id);
         isClientExists(id);
         clientValidator.validateMoneyFormat(value);
 
         if (clientRepository.decreaseWalletById(id, value) != 1) {
             throw new IllegalArgumentException("Not enough funds for this decrease: " + value);
         }
-        log.info("Средства успешно сняты");
+        log.info("Средства успешно сняты у клиента с id: {}", id);
     }
 
     @Transactional
     public void addProductToCart(UUID id, String productName) {
-        log.info("Запрос на добавление продукта \"{}\" в корзину", productName);
+        log.info("Запрос на добавление продукта \"{}\" в корзину клиента с id: {}", productName, id);
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by id: " + id));
         Product product = productRepository.findProductByName(productName)
@@ -84,12 +84,12 @@ public class ClientServiceJpa {
 
         client.getCart().add(product);
         clientRepository.save(client);
-        log.info("Продукт \"{}\" успешно добавлен в корзину", productName);
+        log.info("Продукт \"{}\" успешно добавлен в корзину клиенту с id: {}", productName, id);
     }
 
     @Transactional
     public void removeProductFromCart(UUID id, String productName) {
-        log.info("Запрос на удаление продукта \"{}\" из корзины", productName);
+        log.info("Запрос на удаление продукта \"{}\" из корзины клиента с id: {}", productName, id);
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by id: " + id));
         Product product = productRepository.findProductByName(productName)
@@ -100,12 +100,12 @@ public class ClientServiceJpa {
         } else {
             throw new EntityNotFoundException("Cart doesn't contain product: " + productName);
         }
-        log.info("Продукт \"{}\" успешно удален из корзины", productName);
+        log.info("Продукт \"{}\" успешно удален из корзины клиента с id: {}", productName, id);
     }
 
     @Transactional
     public void payCart(UUID id) {
-        log.info("Запрос на оплату корзины");
+        log.info("Запрос на оплату корзины клиента с id: {}", id);
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by id: " + id));
 
@@ -122,34 +122,35 @@ public class ClientServiceJpa {
         } else {
             throw new IllegalArgumentException("Not enough funds to pay this cart");
         }
-        log.info("Корзина успешно оплачена");
+        log.info("Корзина успешно оплачена у клиента с id: {}", id);
     }
 
     @Transactional
     public void saveClient(ClientDTO clientDTO) {
-        log.info("Запрос на сохранение клиента");
+        log.info("Запрос на сохранение клиента c id: {}", clientDTO.getId());
         clientValidator.validateSaveClientDTO(clientDTO);
 
         clientRepository.save(ClientMapper.toClient(clientDTO));
-        log.info("Клиент успешно сохранен");
+        log.info("Успешно сохранен клиент с id: {}", clientDTO.getId());
     }
 
     @Transactional
     public void updateClient(ClientDTO clientDTO) {
-        log.info("Запрос на изменение клиента");
+        log.info("Запрос на изменение клиента c id: {}", clientDTO.getId());
+        isClientExists(clientDTO.getId());
         clientValidator.validateUpdateClientDTO(clientDTO);
 
         clientRepository.save(ClientMapper.toClient(clientDTO));
-        log.info("Клиент успешно изменен");
+        log.info("Успешно изменен клиент с id: {}", clientDTO.getId());
     }
 
     @Transactional
     public void deleteClient(UUID id) {
-        log.info("Запрос на удалене клиента");
+        log.info("Запрос на удалене клиента с id: {}", id);
         isClientExists(id);
 
         clientRepository.deleteById(id);
-        log.info("Клиент успешно удален");
+        log.info("Успешно удален клиент с id: {}", id);
     }
 
     private void isClientExists(UUID id) {

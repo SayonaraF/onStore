@@ -47,7 +47,7 @@ public class ClientController {
 
     @PostMapping("/{id}/increase_wallet")
     public ResponseEntity<?> increaseWalletBalance(@PathVariable UUID id, @RequestParam BigDecimal value) {
-        logger.info("Получен POST-запрос на пополнение кошелька на сумму {}", value);
+        logger.info("Получен POST-запрос на пополнение кошелька на сумму {} у клиента с id: {}", value, id);
         clientServiceJpa.increaseWalletBalance(id, value);
 
         return ResponseEntity.ok("Wallet successfully increased");
@@ -55,7 +55,7 @@ public class ClientController {
 
     @PostMapping("/{id}/decrease_wallet")
     public ResponseEntity<?> decreaseWalletBalance(@PathVariable UUID id, @RequestParam BigDecimal value) {
-        logger.info("Получен POST-запрос на снятие с кошелька суммы {}", value);
+        logger.info("Получен POST-запрос на снятие с кошелька суммы {} у клиента с id: {}", value, id);
         clientServiceJpa.decreaseWalletBalance(id, value);
 
         return ResponseEntity.ok("Wallet successfully decreased");
@@ -63,7 +63,7 @@ public class ClientController {
 
     @PostMapping("/{id}/add_product")
     public ResponseEntity<?> addProductToCart(@PathVariable UUID id, @RequestParam String name) {
-        logger.info("Получен POST-запрос на добавление в корзину продукта \"{}\"", name);
+        logger.info("Получен POST-запрос на добавление в корзину продукта \"{}\" у клиента с id: {}", name, id);
         clientServiceJpa.addProductToCart(id, name);
 
         return ResponseEntity.ok("Product successfully added to cart");
@@ -71,7 +71,7 @@ public class ClientController {
 
     @PostMapping("/{id}/remove_product")
     public ResponseEntity<?> removeProductFromCart(@PathVariable UUID id, @RequestParam String name) {
-        logger.info("Получен POST-запрос на удаление из корзины продукта \"{}\"", name);
+        logger.info("Получен POST-запрос на удаление из корзины продукта \"{}\" у клиента с id: {}", name, id);
         clientServiceJpa.removeProductFromCart(id, name);
 
         return ResponseEntity.ok("Product successfully removed from cart");
@@ -79,7 +79,7 @@ public class ClientController {
 
     @PostMapping("/{id}/pay_cart")
     public ResponseEntity<?> payForCart(@PathVariable UUID id) {
-        logger.info("Получен POST-запрос на оплату корзины у клиента");
+        logger.info("Получен POST-запрос на оплату корзины у клиента с id: {}", id);
         clientServiceJpa.payCart(id);
 
         return ResponseEntity.ok("Cart successfully payed");
@@ -87,7 +87,7 @@ public class ClientController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createClient(@RequestBody ClientDTO clientDTO) {
-        logger.info("Поступил POST-запрос на создание клиента");
+        logger.info("Поступил POST-запрос на создание клиента с email: {}", clientDTO.getEmail());
         clientServiceJpa.saveClient(clientDTO);
 
         return ResponseEntity.ok("Successfully created client");
@@ -95,7 +95,7 @@ public class ClientController {
 
     @PostMapping("/update")
     public ResponseEntity<?> updateClient(@RequestBody ClientDTO clientDTO) {
-        logger.info("Поступил POST-запрос на изменение клиента");
+        logger.info("Поступил POST-запрос на изменение клиента с id: {}", clientDTO.getId());
         clientServiceJpa.updateClient(clientDTO);
 
         return ResponseEntity.ok("Successfully updated client");
@@ -103,7 +103,7 @@ public class ClientController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteClient(@RequestParam UUID id) {
-        logger.info("Поступил DELETE-запрос на удаление клиента");
+        logger.info("Поступил DELETE-запрос на удаление клиента с id: {}", id);
         clientServiceJpa.deleteClient(id);
 
         return ResponseEntity.ok("Successfully deleted client");

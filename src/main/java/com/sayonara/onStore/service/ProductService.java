@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class ProductServiceJpa {
+public class ProductService {
 
     private ProductRepository productRepository;
     private ProductValidator productValidator;
@@ -38,29 +38,29 @@ public class ProductServiceJpa {
 
     @Transactional
     public void saveProduct(ProductDTO productDTO) {
-        log.info("Запрос на сохранение продукта");
+        log.info("Запрос на сохранение продукта с id: {}", productDTO.getId());
         productValidator.validateCreateProductDTO(productDTO);
 
         productRepository.save(ProductMapper.toProduct(productDTO));
-        log.info("Продукт успешно сохранен");
+        log.info("Успешно сохранен продукт с id: {}", productDTO.getId());
     }
 
     @Transactional
     public void updateProduct(ProductDTO productDTO) {
-        log.info("Запрос на изменение продукта");
+        log.info("Запрос на изменение продукта с id: {}", productDTO.getId());
         productValidator.validateUpdateProductDTO(productDTO);
 
         productRepository.save(ProductMapper.toProduct(productDTO));
-        log.info("Продукт успешно изменен");
+        log.info("Успешно изменен продукт с id: {}", productDTO.getId());
     }
 
     @Transactional
     public void deleteProduct(UUID id) {
-        log.info("Запрос на удалене продукта");
+        log.info("Запрос на удалене продукта с id: {}", id);
         isProductExists(id);
 
         productRepository.deleteById(id);
-        log.info("Продукт успешно удален");
+        log.info("Успешно удален продукт с id: {}", id);
     }
 
     private void isProductExists(UUID id) {
