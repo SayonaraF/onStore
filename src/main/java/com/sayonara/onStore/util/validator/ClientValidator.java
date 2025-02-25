@@ -27,9 +27,11 @@ public class ClientValidator {
                 StringUtils.isAnyBlank(clientDTO.getName(), clientDTO.getSurname())) {
             throw new IllegalArgumentException("Client Name or Surname are required");
         }
-        if (clientDTO.getName().length() > 30 || clientDTO.getSurname().length() > 30 ||
-        clientDTO.getPatronymic().length() > 30) {
-            throw new IllegalArgumentException("Client Name, Surname and Patronymic cannot be longer than 30 characters");
+        if (clientDTO.getName().length() > 30 || clientDTO.getSurname().length() > 30) {
+            throw new IllegalArgumentException("Client Name and Surname cannot be longer than 30 characters");
+        }
+        if (StringUtils.isNotEmpty(clientDTO.getPatronymic()) && clientDTO.getPatronymic().length() > 30) {
+            throw new IllegalArgumentException("Client Patronymic cannot be longer than 30 characters");
         }
         if (clientDTO.getGender() != 'М' && clientDTO.getGender() != 'Ж') {
             throw new IllegalArgumentException("Wrong gender");

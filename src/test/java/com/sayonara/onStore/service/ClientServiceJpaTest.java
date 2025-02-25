@@ -48,11 +48,11 @@ class ClientServiceJpaTest {
         client = new Client();
         client.setId(clientId);
         client.setWalletBalance(BigDecimal.valueOf(100.00));
-        client.setDateOfBirth(LocalDate.ofEpochDay(2000-2-2));
+        client.setDateOfBirth(LocalDate.of(2000, 1, 1));
     }
 
     @Test
-    void findClientByEmail_ShouldReturnClientDTO_WhenClientExists() {
+    void findClientByEmail_shouldReturnClientDTO_whenClientExists() {
         String email = "test@test.com";
         when(clientRepository.findClientByEmail(email)).thenReturn(Optional.of(client));
         ClientDTO expectedDto = ClientMapper.toClientDTO(client);
@@ -66,14 +66,14 @@ class ClientServiceJpaTest {
     }
 
     @Test
-    void findClientByEmail_ShouldThrowException_WhenClientDoesNotExist() {
+    void findClientByEmail_shouldThrowException_whenClientDoesNotExist() {
         when(clientRepository.findClientByEmail(anyString())).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> clientServiceJpa.findClientByEmail("notfound@example.com"));
     }
 
     @Test
-    void findClientByPhone_ShouldReturnClientDTO_WhenClientExists() {
+    void findClientByPhone_shouldReturnClientDTO_whenClientExists() {
         String phone = "+79213984656";
         when(clientRepository.findClientByPhone(phone)).thenReturn(Optional.of(client));
         ClientDTO expectedDto = ClientMapper.toClientDTO(client);
@@ -87,14 +87,14 @@ class ClientServiceJpaTest {
     }
 
     @Test
-    void findClientByPhone_ShouldThrowException_WhenClientDoesNotExist() {
+    void findClientByPhone_shouldThrowException_whenClientDoesNotExist() {
         when(clientRepository.findClientByPhone(anyString())).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> clientServiceJpa.findClientByPhone("+77777777777"));
     }
 
     @Test
-    void increaseWalletBalance_ShouldIncreaseBalance_WhenClientExists() {
+    void increaseWalletBalance_shouldIncreaseBalance_whenClientExists() {
         BigDecimal amount = BigDecimal.valueOf(100.00);
 
         when(clientRepository.existsById(clientId)).thenReturn(true);
@@ -106,14 +106,14 @@ class ClientServiceJpaTest {
     }
 
     @Test
-    void increaseWalletBalance_ShouldThrowException_WhenClientDoesNotExist() {
+    void increaseWalletBalance_shouldThrowException_whenClientDoesNotExist() {
         when(clientRepository.existsById(clientId)).thenReturn(false);
 
         assertThrows(EntityNotFoundException.class, () -> clientServiceJpa.increaseWalletBalance(clientId, BigDecimal.valueOf(100.00)));
     }
 
     @Test
-    void increaseWalletBalance_ShouldThrowException_WhenIncreaseFails() {
+    void increaseWalletBalance_shouldThrowException_whenIncreaseFails() {
         BigDecimal amount = BigDecimal.valueOf(99999999999.00);
         when(clientRepository.existsById(clientId)).thenReturn(true);
         when(clientRepository.increaseWalletById(clientId, amount)).thenReturn(0);
@@ -122,7 +122,7 @@ class ClientServiceJpaTest {
     }
 
     @Test
-    void decreaseWalletBalance_ShouldDecreaseBalance_WhenClientExists() {
+    void decreaseWalletBalance_shouldDecreaseBalance_whenClientExists() {
         BigDecimal amount = BigDecimal.valueOf(100.00);
         when(clientRepository.existsById(clientId)).thenReturn(true);
         when(clientRepository.decreaseWalletById(clientId, amount)).thenReturn(1);
@@ -133,14 +133,14 @@ class ClientServiceJpaTest {
     }
 
     @Test
-    void decreaseWalletBalance_ShouldThrowException_WhenClientDoesNotExist() {
+    void decreaseWalletBalance_shouldThrowException_whenClientDoesNotExist() {
         when(clientRepository.existsById(clientId)).thenReturn(false);
 
         assertThrows(EntityNotFoundException.class, () -> clientServiceJpa.decreaseWalletBalance(clientId, BigDecimal.valueOf(100.00)));
     }
 
     @Test
-    void decreaseWalletBalance_ShouldThrowException_WhenDecreaseFails() {
+    void decreaseWalletBalance_shouldThrowException_whenDecreaseFails() {
         BigDecimal amount = BigDecimal.valueOf(99999999999.00);
         when(clientRepository.existsById(clientId)).thenReturn(true);
         when(clientRepository.decreaseWalletById(clientId, amount)).thenReturn(0);
@@ -149,7 +149,7 @@ class ClientServiceJpaTest {
     }
 
     @Test
-    void addProductToCart_ShouldAddProductToCart_WhenClientAndProductExists() {
+    void addProductToCart_shouldAddProductToCart_whenClientAndProductExists() {
         String productName = "TestProduct";
         Product product = new Product();
         client.setCart(new ArrayList<>());
@@ -164,14 +164,14 @@ class ClientServiceJpaTest {
     }
 
     @Test
-    void addProductToCart_ShouldThrowException_WhenClientDoesNotExist() {
+    void addProductToCart_shouldThrowException_whenClientDoesNotExist() {
         when(clientRepository.findById(clientId)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> clientServiceJpa.addProductToCart(clientId, "TestProduct"));
     }
 
     @Test
-    void addProductToCart_ShouldThrowException_WhenProductDoesNotExist() {
+    void addProductToCart_shouldThrowException_whenProductDoesNotExist() {
         when(clientRepository.findById(clientId)).thenReturn(Optional.of(client));
         when(productRepository.findProductByName(anyString())).thenReturn(Optional.empty());
 
@@ -179,7 +179,7 @@ class ClientServiceJpaTest {
     }
 
     @Test
-    void removeProductFromCart_ShouldRemoveProductFromCart_WhenClientAndProductExists() {
+    void removeProductFromCart_shouldRemoveProductFromCart_whenClientAndProductExists() {
         String productName = "TestProduct";
         Product product = new Product();
         client.setCart(new ArrayList<>(){{add(product);}});
@@ -194,14 +194,14 @@ class ClientServiceJpaTest {
     }
 
     @Test
-    void removeProductToCart_ShouldThrowException_WhenClientDoesNotExist() {
+    void removeProductToCart_shouldThrowException_whenClientDoesNotExist() {
         when(clientRepository.findById(clientId)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> clientServiceJpa.removeProductFromCart(clientId, "TestProduct"));
     }
 
     @Test
-    void removeProductToCart_ShouldThrowException_WhenProductDoesNotExist() {
+    void removeProductToCart_shouldThrowException_whenProductDoesNotExist() {
         when(clientRepository.findById(clientId)).thenReturn(Optional.of(client));
         when(productRepository.findProductByName(anyString())).thenReturn(Optional.empty());
 
@@ -209,7 +209,7 @@ class ClientServiceJpaTest {
     }
 
     @Test
-    void removeProductFromCart_ShouldThrowException_WhenCartDoesNotHaveProduct() {
+    void removeProductFromCart_shouldThrowException_whenCartDoesNotHaveProduct() {
         String productName = "TestProduct";
         Product product = new Product();
         client.setCart(new ArrayList<>());
@@ -221,7 +221,7 @@ class ClientServiceJpaTest {
     }
 
     @Test
-    void payCart_ShouldPayCart_WhenClientAndCartExists() {
+    void payCart_shouldPayCart_whenClientAndCartExists() {
         Product product = new Product();
         client.setCart(new ArrayList<>(){{add(product);}});
 

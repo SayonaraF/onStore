@@ -32,7 +32,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void findProductByName_ShouldReturnProduct_WhenProductExists() {
+    void findProductByName_shouldReturnProduct_whenProductExists() {
         Product product = new Product();
         product.setId(UUID.randomUUID());
         product.setName("TestName");
