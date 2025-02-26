@@ -2,9 +2,12 @@ package com.sayonara.onStore.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sayonara.onStore.dto.ClientDTO;
+import com.sayonara.onStore.entity.Client;
+import com.sayonara.onStore.entity.Product;
 import com.sayonara.onStore.repository.ClientRepository;
+import com.sayonara.onStore.repository.ProductRepository;
 import com.sayonara.onStore.service.ClientServiceJpa;
-import com.sayonara.onStore.util.mapper.ClientMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,24 +37,32 @@ class ClientControllerTest {
     private ClientRepository clientRepository;
 
     @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
     private ObjectMapper mapper;
 
     private UUID clientId;
 
     @BeforeEach
     void setUp() {
-        ClientDTO clientDTO = ClientDTO.builder()
-                .name("Test Client")
-                .surname("Test Client")
-                .gender('М')
-                .dateOfBirth(LocalDate.of(2000, 1, 1))
-                .email("test@test.com")
-                .phone("+72345678990")
-                .walletBalance(BigDecimal.valueOf(200.00))
-                .build();
+        Client client = new Client();
+        client.setName("Test Client");
+        client.setSurname("Test Surname");
+        client.setGender('М');
+        client.setDateOfBirth(LocalDate.of(2000,1,1));
+        client.setEmail("test@test.com");
+        client.setPhone("+72345678990");
+        client.setWalletBalance(BigDecimal.valueOf(200.00));
+
+        clientRepository.save(client);
+        clientId = client.getId();
+    }
+
+    @AfterEach
+    void tearDown() {
         clientRepository.deleteAll();
-        clientRepository.save(ClientMapper.toClient(clientDTO));
-        clientId = clientService.findClientByEmail("test@test.com").getId();
+        productRepository.deleteAll();
     }
 
     @Test
@@ -97,6 +108,7 @@ class ClientControllerTest {
 
     @Test
     void addProductToCart_shouldAddProduct_thenStatus200() throws Exception {
+        productRepository.save(createProduct());
         mockMvc.perform(post("/clients/{id}/add_product", clientId)
                         .param("name", "Test Product"))
                 .andExpect(status().isOk());
@@ -104,7 +116,7 @@ class ClientControllerTest {
 
     @Test
     void removeProductFromCart_shouldRemoveProduct_thenStatus200() throws Exception {
-        // todo: а как оно работает то
+        productRepository.save(createProduct());
         clientService.addProductToCart(clientId, "Test Product");
         mockMvc.perform(post("/clients/{id}/remove_product", clientId)
                         .param("name", "Test Product"))
@@ -113,6 +125,7 @@ class ClientControllerTest {
 
     @Test
     void payForCart_shouldPayCart_thenStatus200() throws Exception {
+        productRepository.save(createProduct());
         clientService.addProductToCart(clientId, "Test Product");
         mockMvc.perform(post("/clients/{id}/pay_cart", clientId))
                 .andExpect(status().isOk());
@@ -120,17 +133,21 @@ class ClientControllerTest {
 
     @Test
     void createClient_shouldSaveClient_thenStatus200() throws Exception {
+        ClientDTO clientDTO = newClient();
+
         mockMvc.perform(post("/clients/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(addClient())))
+                        .content(mapper.writeValueAsString(clientDTO)))
                 .andExpect(status().isOk());
     }
 
     @Test
     void updateClient_shouldUpdateClient_thenStatus200() throws Exception {
+        ClientDTO updatedClient = updatedClient();
+
         mockMvc.perform(post("/clients/update")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(updateClient())))
+                        .content(mapper.writeValueAsString(updatedClient)))
                 .andExpect(status().isOk());
     }
 
@@ -141,7 +158,7 @@ class ClientControllerTest {
                 .andExpect(status().isOk());
     }
 
-    private ClientDTO addClient() {
+    private ClientDTO newClient() {
         return ClientDTO.builder()
                 .name("Test Client")
                 .surname("Test Client")
@@ -153,16 +170,26 @@ class ClientControllerTest {
                 .build();
     }
 
-    private ClientDTO updateClient() {
+    private ClientDTO updatedClient() {
         return ClientDTO.builder()
                 .id(clientId)
-                .name("Test Client")
-                .surname("Test Client")
+                .name("Update Client")
+                .surname("Update Client")
                 .gender('М')
                 .dateOfBirth(LocalDate.of(2000, 1, 1))
                 .email("test2@test.com")
                 .phone("+72345678999")
-                .walletBalance(BigDecimal.valueOf(200.00))
+                .walletBalance(BigDecimal.valueOf(300.00))
                 .build();
+    }
+
+    private Product createProduct() {
+        Product product = new Product();
+        product.setName("Test Product");
+        product.setDescription("Test Description");
+        product.setPrice(BigDecimal.valueOf(20.00));
+        product.setCostPrice(BigDecimal.valueOf(10.00));
+
+        return product;
     }
 }

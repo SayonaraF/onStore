@@ -29,7 +29,7 @@ public class Client {
     private String email;
     @Column(name = "phone", nullable = false, unique = true, length = 12)
     private String phone;
-    @Column(name = "wallet", nullable = false, precision = 10, scale = 2)
+    @Column(name = "wallet_balance", nullable = false, precision = 10, scale = 2)
     private BigDecimal walletBalance;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
