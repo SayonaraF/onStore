@@ -1,54 +1,111 @@
 package com.sayonara.onStore.controller;
 
-import com.sayonara.onStore.entity.Client;
-import com.sayonara.onStore.service.ClientServiceHql;
+import com.sayonara.onStore.dto.ClientDTO;
 import com.sayonara.onStore.service.ClientServiceJpa;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
+@Tag(name = "client_methods")
 @RestController
 @RequestMapping("/clients")
 @AllArgsConstructor
 public class ClientController {
 
     private final ClientServiceJpa clientServiceJpa;
-    private final ClientServiceHql clientServiceHql;
+    private final Logger logger = LoggerFactory.getLogger(ClientController.class);
 
+    @Operation(
+            summary = "Summary for findAllClients()",
+            description = "Description for findAllClients()"
+    )
     @GetMapping
-    public List<Client> findAllClients() {
+    public List<ClientDTO> findAllClients() {
+        logger.info("Получен GET-запрос: /clients на поиск всех клиентов");
         return clientServiceJpa.findAllClients();
-//        return clientServiceHql.findAllClients();
     }
 
     @GetMapping("/find_by_email/{email}")
-    public Client findClientByEmail(@PathVariable String email) {
+    public ClientDTO findClientByEmail(@PathVariable String email) {
+        logger.info("Получен GET-запрос на поиск клиента по email: {}", email);
         return clientServiceJpa.findClientByEmail(email);
-//        return clientServiceHql.findClientByEmail(email);
     }
 
     @GetMapping("/find_by_phone/{phone}")
-    public Client findClientByPhone(@PathVariable String phone) {
+    public ClientDTO findClientByPhone(@PathVariable String phone) {
+        logger.info("Получен GET-запрос на поиск клиента по телефону: {}", phone);
         return clientServiceJpa.findClientByPhone(phone);
-//        return clientServiceHql.findClientByPhone(phone);
+    }
+
+    @PostMapping("/{id}/increase_wallet")
+    public ResponseEntity<?> increaseWalletBalance(@PathVariable UUID id, @RequestParam BigDecimal value) {
+        logger.info("Получен POST-запрос на пополнение кошелька на сумму {} у клиента с id: {}", value, id);
+        clientServiceJpa.increaseWalletBalance(id, value);
+
+        return ResponseEntity.ok("Wallet successfully increased");
+    }
+
+    @PostMapping("/{id}/decrease_wallet")
+    public ResponseEntity<?> decreaseWalletBalance(@PathVariable UUID id, @RequestParam BigDecimal value) {
+        logger.info("Получен POST-запрос на снятие с кошелька суммы {} у клиента с id: {}", value, id);
+        clientServiceJpa.decreaseWalletBalance(id, value);
+
+        return ResponseEntity.ok("Wallet successfully decreased");
+    }
+
+    @PostMapping("/{id}/add_product")
+    public ResponseEntity<?> addProductToCart(@PathVariable UUID id, @RequestParam String name) {
+        logger.info("Получен POST-запрос на добавление в корзину продукта \"{}\" у клиента с id: {}", name, id);
+        clientServiceJpa.addProductToCart(id, name);
+
+        return ResponseEntity.ok("Product successfully added to cart");
+    }
+
+    @PostMapping("/{id}/remove_product")
+    public ResponseEntity<?> removeProductFromCart(@PathVariable UUID id, @RequestParam String name) {
+        logger.info("Получен POST-запрос на удаление из корзины продукта \"{}\" у клиента с id: {}", name, id);
+        clientServiceJpa.removeProductFromCart(id, name);
+
+        return ResponseEntity.ok("Product successfully removed from cart");
+    }
+
+    @PostMapping("/{id}/pay_cart")
+    public ResponseEntity<?> payForCart(@PathVariable UUID id) {
+        logger.info("Получен POST-запрос на оплату корзины у клиента с id: {}", id);
+        clientServiceJpa.payCart(id);
+
+        return ResponseEntity.ok("Cart successfully payed");
     }
 
     @PostMapping("/create")
-    public Client createClient(@RequestBody Client client) {
-        return clientServiceJpa.saveClient(client);
-//        return clientServiceHql.saveClient(client);
+    public ResponseEntity<?> createClient(@RequestBody ClientDTO clientDTO) {
+        logger.info("Поступил POST-запрос на создание клиента с email: {}", clientDTO.getEmail());
+        clientServiceJpa.saveClient(clientDTO);
+
+        return ResponseEntity.ok("Successfully created client");
     }
 
     @PostMapping("/update")
-    public Client updateClient(@RequestBody Client client) {
-        return clientServiceJpa.saveClient(client);
-//        return clientServiceHql.saveClient(client);
+    public ResponseEntity<?> updateClient(@RequestBody ClientDTO clientDTO) {
+        logger.info("Поступил POST-запрос на изменение клиента с id: {}", clientDTO.getId());
+        clientServiceJpa.updateClient(clientDTO);
+
+        return ResponseEntity.ok("Successfully updated client");
     }
 
     @DeleteMapping("/delete")
-    public void deleteClient(@RequestBody Client client) {
-        clientServiceJpa.deleteClient(client);
-//        clientServiceHql.deleteClient(client);
+    public ResponseEntity<?> deleteClient(@RequestParam UUID id) {
+        logger.info("Поступил DELETE-запрос на удаление клиента с id: {}", id);
+        clientServiceJpa.deleteClient(id);
+
+        return ResponseEntity.ok("Successfully deleted client");
     }
 }
