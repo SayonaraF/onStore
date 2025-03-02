@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: on-store-api
+server:
+  port: 8080
