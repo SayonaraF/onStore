@@ -9,6 +9,6 @@ public class KafkaConfiguration {
 
     @Bean
     public NewTopic topic() {
-        return new NewTopic("test-topic", 1, (short) 1);
+        return new NewTopic("on-store-topic", 10, (short) 1);
     }
 }

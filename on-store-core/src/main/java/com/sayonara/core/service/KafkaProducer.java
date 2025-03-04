@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @AllArgsConstructor
 public class KafkaProducer {
@@ -11,6 +13,7 @@ public class KafkaProducer {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     public void send(String message) {
-        kafkaTemplate.send("test", message);
+        kafkaTemplate.send("on-store-topic", UUID.randomUUID().toString(), message);
     }
+
 }
