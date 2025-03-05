@@ -1,7 +1,7 @@
 package com.sayonara.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sayonara.core.dto.ClientDTO;
+import com.sayonara.core.dto.ClientDto;
 import com.sayonara.core.entity.Client;
 import com.sayonara.core.entity.Product;
 import com.sayonara.core.repository.ClientRepository;
@@ -133,7 +133,7 @@ class ClientControllerTest {
 
     @Test
     void createClient_shouldSaveClient_thenStatus200() throws Exception {
-        ClientDTO clientDTO = newClient();
+        ClientDto clientDTO = newClient();
 
         mockMvc.perform(post("/clients/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -143,7 +143,7 @@ class ClientControllerTest {
 
     @Test
     void updateClient_shouldUpdateClient_thenStatus200() throws Exception {
-        ClientDTO updatedClient = updatedClient();
+        ClientDto updatedClient = updatedClient();
 
         mockMvc.perform(post("/clients/update")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -158,8 +158,8 @@ class ClientControllerTest {
                 .andExpect(status().isOk());
     }
 
-    private ClientDTO newClient() {
-        return ClientDTO.builder()
+    private ClientDto newClient() {
+        return ClientDto.builder()
                 .name("Test Client")
                 .surname("Test Client")
                 .gender('М')
@@ -170,8 +170,8 @@ class ClientControllerTest {
                 .build();
     }
 
-    private ClientDTO updatedClient() {
-        return ClientDTO.builder()
+    private ClientDto updatedClient() {
+        return ClientDto.builder()
                 .id(clientId)
                 .name("Update Client")
                 .surname("Update Client")

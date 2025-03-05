@@ -1,6 +1,6 @@
 package com.sayonara.core.util.validator;
 
-import com.sayonara.core.dto.ClientDTO;
+import com.sayonara.core.dto.ClientDto;
 import com.sayonara.core.entity.Client;
 import com.sayonara.core.repository.ClientRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -21,7 +21,7 @@ public class ClientValidator {
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     private static final String PHONE_REGEX = "^\\+7\\d{10}$";
 
-    public void validateClientDTO(ClientDTO clientDTO) {
+    public void validateClientDTO(ClientDto clientDTO) {
 
         if (StringUtils.isAnyEmpty(clientDTO.getSurname(), clientDTO.getName()) ||
                 StringUtils.isAnyBlank(clientDTO.getName(), clientDTO.getSurname())) {
@@ -61,7 +61,7 @@ public class ClientValidator {
         }
     }
 
-    public void validateSaveClientDTO(ClientDTO clientDTO) {
+    public void validateSaveClientDTO(ClientDto clientDTO) {
         validateClientDTO(clientDTO);
 
         if (clientRepository.findClientByEmail(clientDTO.getEmail()).isPresent()) {
@@ -73,7 +73,7 @@ public class ClientValidator {
         }
     }
 
-    public void validateUpdateClientDTO(ClientDTO clientDTO) {
+    public void validateUpdateClientDTO(ClientDto clientDTO) {
         validateClientDTO(clientDTO);
 
         Optional<Client> clientByEmail = clientRepository.findClientByEmail(clientDTO.getEmail());

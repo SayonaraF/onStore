@@ -1,6 +1,6 @@
 package com.sayonara.core.service;
 
-import com.sayonara.core.dto.ProductDTO;
+import com.sayonara.core.dto.ProductDto;
 import com.sayonara.core.entity.Product;
 import com.sayonara.core.repository.ProductRepository;
 import com.sayonara.core.util.mapper.ProductMapper;
@@ -38,7 +38,7 @@ class ProductServiceTest {
         product.setName("TestName");
         when(productRepository.findProductByName("TestName")).thenReturn(Optional.of(product));
 
-        ProductDTO productDTO = ProductMapper.toProductDTO(product);
+        ProductDto productDTO = ProductMapper.toProductDTO(product);
 
         productService.findProductByName(productDTO.getName());
 

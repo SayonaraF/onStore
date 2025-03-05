@@ -1,6 +1,6 @@
 package com.sayonara.core.util.mapper;
 
-import com.sayonara.core.dto.ClientDTO;
+import com.sayonara.core.dto.ClientDto;
 import com.sayonara.core.entity.Client;
 
 import java.time.LocalDate;
@@ -8,7 +8,7 @@ import java.time.Period;
 
 public class ClientMapper {
 
-    public static Client toClient(ClientDTO clientDTO) {
+    public static Client toClient(ClientDto clientDTO) {
         Client client = new Client();
         client.setId(clientDTO.getId());
         client.setName(clientDTO.getName());
@@ -23,8 +23,8 @@ public class ClientMapper {
         return client;
     }
 
-    public static ClientDTO toClientDTO(Client client) {
-        return ClientDTO.builder()
+    public static ClientDto toClientDTO(Client client) {
+        return ClientDto.builder()
                 .id(client.getId())
                 .name(client.getName())
                 .surname(client.getSurname())

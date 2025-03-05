@@ -1,6 +1,6 @@
 package com.sayonara.core.service;
 
-import com.sayonara.core.dto.ClientDTO;
+import com.sayonara.core.dto.ClientDto;
 import com.sayonara.core.entity.Client;
 import com.sayonara.core.entity.Product;
 import com.sayonara.core.repository.ClientRepository;
@@ -55,9 +55,9 @@ class ClientServiceJpaTest {
     void findClientByEmail_shouldReturnClientDTO_whenClientExists() {
         String email = "test@test.com";
         when(clientRepository.findClientByEmail(email)).thenReturn(Optional.of(client));
-        ClientDTO expectedDto = ClientMapper.toClientDTO(client);
+        ClientDto expectedDto = ClientMapper.toClientDTO(client);
 
-        ClientDTO result = clientServiceJpa.findClientByEmail(email);
+        ClientDto result = clientServiceJpa.findClientByEmail(email);
 
         assertNotNull(result);
         assertEquals(expectedDto.getEmail(), result.getEmail());
@@ -76,9 +76,9 @@ class ClientServiceJpaTest {
     void findClientByPhone_shouldReturnClientDTO_whenClientExists() {
         String phone = "+79213984656";
         when(clientRepository.findClientByPhone(phone)).thenReturn(Optional.of(client));
-        ClientDTO expectedDto = ClientMapper.toClientDTO(client);
+        ClientDto expectedDto = ClientMapper.toClientDTO(client);
 
-        ClientDTO result = clientServiceJpa.findClientByPhone(phone);
+        ClientDto result = clientServiceJpa.findClientByPhone(phone);
 
         assertNotNull(result);
         assertEquals(expectedDto.getPhone(), result.getPhone());

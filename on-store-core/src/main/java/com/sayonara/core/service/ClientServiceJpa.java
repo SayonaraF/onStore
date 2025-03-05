@@ -1,6 +1,6 @@
 package com.sayonara.core.service;
 
-import com.sayonara.core.dto.ClientDTO;
+import com.sayonara.core.dto.ClientDto;
 import com.sayonara.core.entity.Client;
 import com.sayonara.core.entity.Product;
 import com.sayonara.core.repository.ClientRepository;
@@ -27,12 +27,12 @@ public class ClientServiceJpa {
     private final ProductRepository productRepository;
     private final ClientValidator clientValidator;
 
-    public List<ClientDTO> findAllClients() {
+    public List<ClientDto> findAllClients() {
         log.info("Запрос на получение всех клиентов");
         return clientRepository.findAll().stream().map(ClientMapper::toClientDTO).collect(Collectors.toList());
     }
 
-    public ClientDTO findClientByEmail(String email) {
+    public ClientDto findClientByEmail(String email) {
         log.info("Запрос на получение клиента по email: {}", email);
         Client client = clientRepository.findClientByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by email: " + email));
@@ -40,7 +40,7 @@ public class ClientServiceJpa {
         return ClientMapper.toClientDTO(client);
     }
 
-    public ClientDTO findClientByPhone(String phone) {
+    public ClientDto findClientByPhone(String phone) {
         log.info("Запрос на получение клиента по телефону: {}", phone);
         Client client = clientRepository.findClientByPhone(phone)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by phone number: " + phone));
@@ -126,7 +126,7 @@ public class ClientServiceJpa {
     }
 
     @Transactional
-    public void saveClient(ClientDTO clientDTO) {
+    public void saveClient(ClientDto clientDTO) {
         log.info("Запрос на сохранение клиента c id: {}", clientDTO.getId());
         clientValidator.validateSaveClientDTO(clientDTO);
 
@@ -135,7 +135,7 @@ public class ClientServiceJpa {
     }
 
     @Transactional
-    public void updateClient(ClientDTO clientDTO) {
+    public void updateClient(ClientDto clientDTO) {
         log.info("Запрос на изменение клиента c id: {}", clientDTO.getId());
         isClientExists(clientDTO.getId());
         clientValidator.validateUpdateClientDTO(clientDTO);

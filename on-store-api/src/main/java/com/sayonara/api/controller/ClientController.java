@@ -1,6 +1,6 @@
 package com.sayonara.api.controller;
 
-import com.sayonara.core.dto.ClientDTO;
+import com.sayonara.core.dto.ClientDto;
 import com.sayonara.core.service.ClientServiceJpa;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,19 +28,19 @@ public class ClientController {
             description = "Description for findAllClients()"
     )
     @GetMapping
-    public List<ClientDTO> findAllClients() {
+    public List<ClientDto> findAllClients() {
         logger.info("Получен GET-запрос: /clients на поиск всех клиентов");
         return clientServiceJpa.findAllClients();
     }
 
     @GetMapping("/find_by_email/{email}")
-    public ClientDTO findClientByEmail(@PathVariable String email) {
+    public ClientDto findClientByEmail(@PathVariable String email) {
         logger.info("Получен GET-запрос на поиск клиента по email: {}", email);
         return clientServiceJpa.findClientByEmail(email);
     }
 
     @GetMapping("/find_by_phone/{phone}")
-    public ClientDTO findClientByPhone(@PathVariable String phone) {
+    public ClientDto findClientByPhone(@PathVariable String phone) {
         logger.info("Получен GET-запрос на поиск клиента по телефону: {}", phone);
         return clientServiceJpa.findClientByPhone(phone);
     }
@@ -86,7 +86,7 @@ public class ClientController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createClient(@RequestBody ClientDTO clientDTO) {
+    public ResponseEntity<?> createClient(@RequestBody ClientDto clientDTO) {
         logger.info("Поступил POST-запрос на создание клиента с email: {}", clientDTO.getEmail());
         clientServiceJpa.saveClient(clientDTO);
 
@@ -94,7 +94,7 @@ public class ClientController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<?> updateClient(@RequestBody ClientDTO clientDTO) {
+    public ResponseEntity<?> updateClient(@RequestBody ClientDto clientDTO) {
         logger.info("Поступил POST-запрос на изменение клиента с id: {}", clientDTO.getId());
         clientServiceJpa.updateClient(clientDTO);
 

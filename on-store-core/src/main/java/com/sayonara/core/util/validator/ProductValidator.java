@@ -1,6 +1,6 @@
 package com.sayonara.core.util.validator;
 
-import com.sayonara.core.dto.ProductDTO;
+import com.sayonara.core.dto.ProductDto;
 import com.sayonara.core.entity.Product;
 import com.sayonara.core.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,7 +16,7 @@ public class ProductValidator {
 
     private final ProductRepository productRepository;
 
-    public void validateProductDRO(ProductDTO productDTO) {
+    public void validateProductDRO(ProductDto productDTO) {
         if (StringUtils.isEmpty(productDTO.getName()) || StringUtils.isBlank(productDTO.getName())) {
             throw new IllegalArgumentException("Product name are required");
         }
@@ -43,7 +43,7 @@ public class ProductValidator {
         }
     }
 
-    public void validateCreateProductDTO(ProductDTO productDTO) {
+    public void validateCreateProductDTO(ProductDto productDTO) {
         validateProductDRO(productDTO);
 
         if (productRepository.findProductByName(productDTO.getName()).isPresent()) {
@@ -51,7 +51,7 @@ public class ProductValidator {
         }
     }
 
-    public void validateUpdateProductDTO(ProductDTO productDTO) {
+    public void validateUpdateProductDTO(ProductDto productDTO) {
         validateProductDRO(productDTO);
 
         Optional<Product> product = productRepository.findProductByName(productDTO.getName());

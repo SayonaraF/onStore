@@ -1,6 +1,6 @@
 package com.sayonara.core.service;
 
-import com.sayonara.core.dto.ProductDTO;
+import com.sayonara.core.dto.ProductDto;
 import com.sayonara.core.entity.Product;
 import com.sayonara.core.repository.ProductRepository;
 import com.sayonara.core.util.mapper.ProductMapper;
@@ -23,12 +23,12 @@ public class ProductService {
     private ProductRepository productRepository;
     private ProductValidator productValidator;
 
-    public List<ProductDTO> findAllProducts() {
+    public List<ProductDto> findAllProducts() {
         log.info("Запрос на получение всех продуктов");
         return productRepository.findAll().stream().map(ProductMapper::toProductDTO).collect(Collectors.toList());
     }
 
-    public ProductDTO findProductByName(String name) {
+    public ProductDto findProductByName(String name) {
         log.info("Запрос на получение клиента по названию: {}", name);
         Product product = productRepository.findProductByName(name)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found by name: " + name));
@@ -37,7 +37,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void saveProduct(ProductDTO productDTO) {
+    public void saveProduct(ProductDto productDTO) {
         log.info("Запрос на сохранение продукта с id: {}", productDTO.getId());
         productValidator.validateCreateProductDTO(productDTO);
 
@@ -46,7 +46,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void updateProduct(ProductDTO productDTO) {
+    public void updateProduct(ProductDto productDTO) {
         log.info("Запрос на изменение продукта с id: {}", productDTO.getId());
         productValidator.validateUpdateProductDTO(productDTO);
         isProductExists(productDTO.getId());

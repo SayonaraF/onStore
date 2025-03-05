@@ -1,6 +1,6 @@
-package com.sayonara.core.util;
+package com.sayonara.core.util.scheduler;
 
-import com.sayonara.core.service.KafkaProducer;
+import com.sayonara.core.kafka.KafkaProducer;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -11,7 +11,7 @@ public class SendKafkaMessageJob {
 
     private final KafkaProducer kafkaProducer;
 
-    @Scheduled(cron = "0 */15 * * * *")
+    @Scheduled(cron = "${interval_in_cron}")
     public void sendMessageToKafka() {
         kafkaProducer.send("Kafka scheduler is working");
     }

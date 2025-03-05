@@ -1,6 +1,6 @@
 package com.sayonara.core.service;
 
-import com.sayonara.core.dto.ClientDTO;
+import com.sayonara.core.dto.ClientDto;
 import com.sayonara.core.entity.Client;
 import com.sayonara.core.repository.ClientRepositoryHql;
 import com.sayonara.core.util.mapper.ClientMapper;
@@ -18,18 +18,18 @@ public class ClientServiceHql {
 
     private ClientRepositoryHql clientRepositoryHql;
 
-    public List<ClientDTO> findAllClients() {
+    public List<ClientDto> findAllClients() {
         return clientRepositoryHql.findAllClients().stream().map(ClientMapper::toClientDTO).collect(Collectors.toList());
     }
 
-    public ClientDTO findClientByEmail(String email) {
+    public ClientDto findClientByEmail(String email) {
         Client client = clientRepositoryHql.findClientByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by email: " + email));
 
         return ClientMapper.toClientDTO(client);
     }
 
-    public ClientDTO findClientByPhone(String phone) {
+    public ClientDto findClientByPhone(String phone) {
         Client client = clientRepositoryHql.findClientByPhone(phone)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found by phone number: " + phone));
 
@@ -37,13 +37,13 @@ public class ClientServiceHql {
     }
 
     @Transactional
-    public ClientDTO saveClient(ClientDTO clientDTO) {
+    public ClientDto saveClient(ClientDto clientDTO) {
         Client client = ClientMapper.toClient(clientDTO);
         return ClientMapper.toClientDTO(clientRepositoryHql.saveClient(client));
     }
 
     @Transactional
-    public void deleteClient(ClientDTO clientDTO) {
+    public void deleteClient(ClientDto clientDTO) {
         clientRepositoryHql.deleteClient(ClientMapper.toClient(clientDTO));
     }
 }

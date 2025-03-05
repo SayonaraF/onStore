@@ -1,7 +1,7 @@
 package com.sayonara.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sayonara.core.dto.ProductDTO;
+import com.sayonara.core.dto.ProductDto;
 import com.sayonara.core.repository.ProductRepository;
 import com.sayonara.core.service.ProductService;
 import com.sayonara.core.util.mapper.ProductMapper;
@@ -39,7 +39,7 @@ class ProductControllerTest {
 
     @BeforeEach
     void setUp() {
-        ProductDTO productDTO = ProductDTO.builder()
+        ProductDto productDTO = ProductDto.builder()
                 .name("Test Product")
                 .description("Test")
                 .costPrice(BigDecimal.valueOf(100.00))
@@ -89,8 +89,8 @@ class ProductControllerTest {
                 .andExpect(status().isOk());
     }
 
-    private ProductDTO newProduct() {
-        return ProductDTO.builder()
+    private ProductDto newProduct() {
+        return ProductDto.builder()
                 .name("New Product")
                 .description("New Product")
                 .costPrice(BigDecimal.valueOf(100.00))
@@ -98,8 +98,8 @@ class ProductControllerTest {
                 .build();
     }
 
-    private ProductDTO updateProduct() {
-        return ProductDTO.builder()
+    private ProductDto updateProduct() {
+        return ProductDto.builder()
                 .id(productId)
                 .name("Updated Product")
                 .description("Updated Product")

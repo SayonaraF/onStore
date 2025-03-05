@@ -1,11 +1,11 @@
 package com.sayonara.core.util.mapper;
 
-import com.sayonara.core.dto.ProductDTO;
+import com.sayonara.core.dto.ProductDto;
 import com.sayonara.core.entity.Product;
 
 public class ProductMapper {
 
-    public static Product toProduct(ProductDTO productDTO) {
+    public static Product toProduct(ProductDto productDTO) {
         Product product = new Product();
         product.setId(productDTO.getId());
         product.setName(productDTO.getName());
@@ -16,8 +16,8 @@ public class ProductMapper {
         return product;
     }
 
-    public static ProductDTO toProductDTO(Product product) {
-        return ProductDTO.builder()
+    public static ProductDto toProductDTO(Product product) {
+        return ProductDto.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .description(product.getDescription())

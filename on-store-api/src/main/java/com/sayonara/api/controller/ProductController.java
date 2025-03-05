@@ -1,6 +1,6 @@
 package com.sayonara.api.controller;
 
-import com.sayonara.core.dto.ProductDTO;
+import com.sayonara.core.dto.ProductDto;
 import com.sayonara.core.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,19 +19,19 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public List<ProductDTO> findAllProducts() {
+    public List<ProductDto> findAllProducts() {
         log.info("Поступил GET-запрос: /products на поиск всех продуктов");
         return productService.findAllProducts();
     }
 
     @GetMapping("/find_by_name/{name}")
-    public ProductDTO findProductByName(@PathVariable("name") String name) {
+    public ProductDto findProductByName(@PathVariable("name") String name) {
         log.info("Получен GET-запрос: /find_by_name/{name} на поиск продукта по названию: {}", name);
         return productService.findProductByName(name);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createProduct(@RequestBody ProductDTO product) {
+    public ResponseEntity<?> createProduct(@RequestBody ProductDto product) {
         log.info("Поступил POST-запрос: /create на создание продукта с именем: {}", product.getName());
         productService.saveProduct(product);
 
@@ -39,7 +39,7 @@ public class ProductController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<?> updateProduct(@RequestBody ProductDTO product) {
+    public ResponseEntity<?> updateProduct(@RequestBody ProductDto product) {
         log.info("Поступил POST-запрос: /update на обновление продукта с id: {}", product.getId());
         productService.updateProduct(product);
 
