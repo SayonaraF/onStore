@@ -1,5 +1,6 @@
 package com.sayonara.api.controller;
 
+import com.sayonara.api.service.RestTemplateService;
 import com.sayonara.core.dto.CustomerDto;
 import com.sayonara.core.kafka.KafkaProducer;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class KafkaController {
 
     private KafkaProducer kafkaProducer;
+    private RestTemplateService restTemplateService;
 
     @PostMapping
     public ResponseEntity<String> sendMessage(@RequestParam("message") String message) {
@@ -35,4 +37,11 @@ public class KafkaController {
         return ResponseEntity.ok("Customer Sent");
     }
 
+    @GetMapping("/random_customer")
+    public String getCustomerFromSecondService() {
+        log.info("Get Customer from Second Service");
+        CustomerDto customerDto = restTemplateService.fetchCustomerDto();
+
+        return customerDto.toString();
+    }
 }

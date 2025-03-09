@@ -17,4 +17,4 @@ spring:
 logging:
   file: { name: logs/app.log }
   pattern: { file: "%d{yyyy-MM-dd HH:mm:ss} [%level] - %msg%n" }
-interval_in_cron: 0 */15 * * * *
+interval_in_cron: 0 */1 * * * *
