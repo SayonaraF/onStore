@@ -1,6 +1,9 @@
 package com.sayonara.core.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,7 +17,7 @@ public class CustomerDto {
     private String name;
     private String address;
     private int age;
-    private boolean active;
+    private boolean isActive;
     private LocalDate birthday;
     private LocalDateTime createdAt;
     private BigDecimal salary;
@@ -27,7 +30,7 @@ public class CustomerDto {
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", age=" + age +
-                ", active=" + active +
+                ", active=" + isActive +
                 ", birthday=" + birthday +
                 ", createdAt=" + createdAt +
                 ", salary=" + salary +

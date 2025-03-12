@@ -1,4 +1,4 @@
-package com.sayonara.core.util.scheduler;
+package com.sayonara.core.scheduler;
 
 import com.sayonara.core.kafka.KafkaProducer;
 import lombok.AllArgsConstructor;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @AllArgsConstructor
+@Async
 public class SendKafkaMessageJob {
 
     private final KafkaProducer kafkaProducer;

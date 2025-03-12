@@ -5,3 +5,10 @@ spring:
     import: C:\Users\Sayonara\Desktop\Java\Projects\onStore\on-store-core\src\main\resources\application.yml
 server:
   port: 8080
+grpc:
+  client:
+    customerService:
+      address: static://localhost:9090
+      negotiationType: plaintext
+  server:
+    port: 9091

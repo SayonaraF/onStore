@@ -1,6 +1,7 @@
 package com.sayonara.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sayonara.api.ApiApplication;
 import com.sayonara.core.dto.ClientDto;
 import com.sayonara.core.entity.Client;
 import com.sayonara.core.entity.Product;
@@ -23,7 +24,7 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
+@SpringBootTest(classes = ApiApplication.class)
 @AutoConfigureMockMvc
 class ClientControllerTest {
 

@@ -7,3 +7,4 @@ spring:
   h2:
     console:
       enabled: true
+interval_in_cron: 0 0/5 * * * ?

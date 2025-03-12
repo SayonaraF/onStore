@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option java_package = "com.sayonara.grpc";
+option java_outer_classname = "CustomerProto";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+message GiftCard {
+  string id = 1;
+  double discount = 2;
+  google.protobuf.Timestamp expire_date = 3;
+}
+
+message CustomerDto {
+  string id = 1;
+  string name = 2;
+  string address = 3;
+  int32 age = 4;
+  bool isActive = 5;
+  google.protobuf.Timestamp birthday = 6;
+  google.protobuf.Timestamp created_at = 7;
+  double salary = 8;
+  GiftCard card = 9;
+}
+
+service CustomerService {
+  rpc GetCustomer (google.protobuf.StringValue) returns (CustomerDto);
+}

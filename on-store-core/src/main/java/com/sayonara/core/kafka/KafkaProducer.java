@@ -3,11 +3,13 @@ package com.sayonara.core.kafka;
 import com.sayonara.core.dto.CustomerDto;
 import com.sayonara.core.service.CustomerService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class KafkaProducer {
@@ -21,9 +23,10 @@ public class KafkaProducer {
     }
 
     public void sendRandomCustomer() {
-        CustomerDto customer = customerService.getRandomCustomer();
+        CustomerDto customerDto = customerService.getRandomCustomer();
 
-        customerKafkaTemplate.send("customer-topic", customer.getId().toString(), customer);
+        log.info("Producer is working, send object: {}", customerDto);
+        customerKafkaTemplate.send("customer-topic", customerDto.getId().toString(), customerDto);
     }
 
 }
