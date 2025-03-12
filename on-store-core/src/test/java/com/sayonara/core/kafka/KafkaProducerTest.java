@@ -35,7 +35,7 @@ class KafkaProducerTest {
     }
 
     @Test
-    public void sendingRandomCustomer_shouldSendingCustomer_thenMessageReceived() throws InterruptedException, JsonProcessingException {
+    public void sendingRandomCustomer_shouldSendingCustomer_thenMessageReceived() throws InterruptedException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
 
