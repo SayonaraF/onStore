@@ -1,6 +1,5 @@
 package com.sayonara.core.kafka;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sayonara.core.CoreApplication;
@@ -24,10 +23,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @EmbeddedKafka
 class KafkaProducerTest {
 
+    private final BlockingQueue<ConsumerRecord<String, CustomerDto>> queue = new LinkedBlockingQueue<>();
+
     @Autowired
     private KafkaProducer kafkaProducer;
-
-    private final BlockingQueue<ConsumerRecord<String, CustomerDto>> queue = new LinkedBlockingQueue<>();
 
     @KafkaListener(topics = "customer-topic", groupId = "test_consumer")
     public void listen(ConsumerRecord<String, CustomerDto> record) {
@@ -45,5 +44,6 @@ class KafkaProducerTest {
 
         assertNotNull(record);
         assertNotNull(record.value());
+        assertInstanceOf(CustomerDto.class, record.value());
     }
 }

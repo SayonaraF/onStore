@@ -26,6 +26,14 @@ public class KafkaController {
     @PostMapping("/send_customer")
     public ResponseEntity<String> sendCustomer() {
         kafkaProducer.sendRandomCustomer();
+
+        return ResponseEntity.ok("Customer Sent");
+    }
+
+    @PostMapping("/send-ten-customers")
+    public ResponseEntity<String> sendTenCustomers() {
+        kafkaProducer.sendTenRandomCustomers();
+
         return ResponseEntity.ok("Customer Sent");
     }
 }

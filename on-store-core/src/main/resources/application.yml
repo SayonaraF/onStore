@@ -1,4 +1,6 @@
 spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
   application: { name: on-store-core }
   datasource:
     url: jdbc:postgresql://localhost:5432/on_store_app
@@ -10,11 +12,7 @@ spring:
     hibernate: { ddl-auto: none }
     properties:
       hibernate: { format_sql: true }
-  kafka:
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 logging:
   file: { name: logs/app.log }
   pattern: { file: "%d{yyyy-MM-dd HH:mm:ss} [%level] - %msg%n" }
-interval_in_cron: 0 */1 * * * *
+interval_in_cron: 0 */15 * * * *
